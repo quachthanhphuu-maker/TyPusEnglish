@@ -26,6 +26,8 @@ affected behavior.
 - [Architecture](docs/ARCHITECTURE.md) — Stack, modules, and dependencies.
 - [Database](docs/DATABASE.md) — Records, constraints, and maintenance.
 - [Security](docs/SECURITY.md) — Authentication, access, and uploads.
+- [Frontend](docs/FRONTEND.md) — Sitemap, UI components, mock service layer, and design system.
+- [Localization](docs/I18N.md) — next-intl conventions, namespaces, and translation keys.
 
 ## Verification
 

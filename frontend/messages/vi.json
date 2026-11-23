@@ -1,0 +1,78 @@
+{
+  "common": {
+    "appName": "TyPusEnglish",
+    "tagline": "Hệ thống quản lý giảng dạy & tự học Tiếng Anh",
+    "actions": {
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "create": "Tạo mới",
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa",
+      "back": "Quay lại",
+      "submit": "Nộp bài",
+      "view": "Xem chi tiết",
+      "login": "Đăng nhập",
+      "logout": "Đăng xuất"
+    },
+    "states": {
+      "loading": "Đang tải dữ liệu...",
+      "empty": "Không có dữ liệu",
+      "emptyDescription": "Chưa có mục nào được ghi nhận.",
+      "error": "Đã có lỗi xảy ra",
+      "errorRetry": "Thử lại",
+      "mockBadge": "Dữ liệu mô phỏng (Mock Service)"
+    },
+    "navigation": {
+      "home": "Trang chủ",
+      "tutor": "Gia sư / Giáo viên",
+      "student": "Học sinh",
+      "parent": "Phụ huynh",
+      "selfStudy": "Tự học Tiếng Anh"
+    }
+  },
+  "auth": {
+    "title": "Đăng nhập TyPusEnglish",
+    "subtitle": "Hệ thống đăng nhập không cần mật khẩu qua Email Magic Link",
+    "emailLabel": "Địa chỉ Email của bạn",
+    "emailPlaceholder": "nhập email (ví dụ: gia-su@example.com)",
+    "sendLink": "Gửi liên kết đăng nhập",
+    "sentSuccess": "Đã gửi liên kết! Vui lòng kiểm tra hộp thư đến của bạn.",
+    "roleHint": "Mẹo thử nghiệm: Sử dụng các tài khoản mẫu bên dưới để xem các phân hệ khác nhau:"
+  },
+  "tutor": {
+    "title": "Bàn làm việc Gia sư",
+    "description": "Quản lý lớp học, điểm danh, bài tập, học phí và báo cáo học tập.",
+    "classesTitle": "Lớp học phụ trách",
+    "newClass": "Tạo lớp học mới",
+    "studentsCount": "{count} học sinh",
+    "quickStats": {
+      "activeClasses": "Lớp đang dạy",
+      "todayLessons": "Buổi học hôm nay",
+      "pendingTuition": "Học phí chờ thu",
+      "ungradedAssignments": "Bài tập chờ chấm"
+    }
+  },
+  "student": {
+    "title": "Khu vực Học sinh",
+    "description": "Xem lớp học, nộp bài tập và tra cứu kết quả đã công bố.",
+    "myClasses": "Lớp học của tôi",
+    "upcomingAssignments": "Bài tập cần hoàn thành",
+    "recentGrades": "Kết quả học tập mới nhất"
+  },
+  "parent": {
+    "title": "Cổng thông tin Phụ huynh",
+    "description": "Theo dõi tiến độ, điểm danh và báo cáo học tập định kỳ của con.",
+    "childrenList": "Hồ sơ các con",
+    "latestReport": "Báo cáo học tập mới nhất",
+    "notice": "Phụ huynh chỉ xem được các báo cáo đã xuất bản chính thức từ giáo viên phụ trách."
+  },
+  "selfStudy": {
+    "title": "Tự học Tiếng Anh (Không gian cá nhân)",
+    "description": "Ôn tập từ vựng ngắt quãng (Spaced Repetition), flashcards và duy trì chuỗi học tập.",
+    "mySets": "Bộ từ vựng của tôi",
+    "createSet": "Tạo bộ từ vựng mới",
+    "startReview": "Bắt đầu ôn tập",
+    "streakDays": "{count} ngày liên tiếp",
+    "dailyGoal": "Mục tiêu ngày: 20 từ"
+  }
+}

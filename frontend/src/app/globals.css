@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --snow-bg: #F8FBFF;
+    --ice-surface: #EAF4FC;
+    --penguin-slate: #1B2A38;
+    --penguin-orange: #FF7A00;
+    --glacier-blue: #0EA5E9;
+
+    --background: 210 50% 98%;
+    --foreground: 212 35% 16%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 212 35% 16%;
+
+    --border: 210 40% 91%;
+    --input: 210 40% 91%;
+    --ring: 28 100% 50%;
+
+    --radius: 0.75rem;
+  }
+
+  /* Custom Selection: Penguin Orange / White */
+  ::selection {
+    background-color: #FF7A00;
+    color: #FFFFFF;
+  }
+
+  ::-moz-selection {
+    background-color: #FF7A00;
+    color: #FFFFFF;
+  }
+
+  /* Clean & Minimal Scrollbars */
+  html {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #D8E9F8 #F8FBFF;
+  }
+
+  html::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  html::-webkit-scrollbar-track {
+    background: #F8FBFF;
+  }
+
+  html::-webkit-scrollbar-thumb {
+    background: #D8E9F8;
+    border-radius: 9999px;
+  }
+
+  html::-webkit-scrollbar-thumb:hover {
+    background: #0EA5E9;
+  }
+
+  body {
+    background-color: var(--snow-bg);
+    color: var(--penguin-slate);
+    min-height: 100vh;
+    overflow-x: clip;
+  }
+}
+
+/* Glassmorphism helpers for Arctic Penguin Theme */
+.ice-glass {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid #D8E9F8;
+}
+
+.ice-card {
+  background: #FFFFFF;
+  border: 1px solid #D8E9F8;
+  box-shadow: 0 4px 20px -2px rgba(27, 42, 56, 0.05);
+}
+
+.ice-glow-orange {
+  box-shadow: 0 8px 30px -4px rgba(255, 122, 0, 0.3);
+}
+
+.ice-glow-glacier {
+  box-shadow: 0 8px 30px -4px rgba(14, 165, 233, 0.25);
+}

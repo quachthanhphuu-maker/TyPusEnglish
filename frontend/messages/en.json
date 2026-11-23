@@ -1,0 +1,78 @@
+{
+  "common": {
+    "appName": "TyPusEnglish",
+    "tagline": "Teaching Management & English Self-Study Toolkit",
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "create": "Create",
+      "edit": "Edit",
+      "delete": "Delete",
+      "back": "Back",
+      "submit": "Submit",
+      "view": "View Details",
+      "login": "Sign In",
+      "logout": "Sign Out"
+    },
+    "states": {
+      "loading": "Loading data...",
+      "empty": "No data found",
+      "emptyDescription": "No items recorded yet.",
+      "error": "An error occurred",
+      "errorRetry": "Try again",
+      "mockBadge": "Mock Service Mode"
+    },
+    "navigation": {
+      "home": "Home",
+      "tutor": "Tutor / Teacher",
+      "student": "Student",
+      "parent": "Parent",
+      "selfStudy": "Self-Study"
+    }
+  },
+  "auth": {
+    "title": "Sign In to TyPusEnglish",
+    "subtitle": "Passwordless sign-in via Email Magic Link",
+    "emailLabel": "Your Email Address",
+    "emailPlaceholder": "Enter email (e.g., tutor@example.com)",
+    "sendLink": "Send Magic Link",
+    "sentSuccess": "Link sent! Please check your email inbox.",
+    "roleHint": "Quick test tip: Use the sample accounts below to explore different portals:"
+  },
+  "tutor": {
+    "title": "Tutor Workspace",
+    "description": "Manage classes, attendance, assignments, tuition, and parent reports.",
+    "classesTitle": "Assigned Classes",
+    "newClass": "Create New Class",
+    "studentsCount": "{count} students",
+    "quickStats": {
+      "activeClasses": "Active Classes",
+      "todayLessons": "Today's Lessons",
+      "pendingTuition": "Pending Tuition",
+      "ungradedAssignments": "Ungraded Submissions"
+    }
+  },
+  "student": {
+    "title": "Student Space",
+    "description": "View classes, submit assignments, and see published scores.",
+    "myClasses": "My Classes",
+    "upcomingAssignments": "Upcoming Assignments",
+    "recentGrades": "Latest Published Results"
+  },
+  "parent": {
+    "title": "Parent Portal",
+    "description": "Track attendance, homework, and official published reports for your children.",
+    "childrenList": "Linked Children",
+    "latestReport": "Latest Academic Report",
+    "notice": "Parents only have read access to published records for authorized children."
+  },
+  "selfStudy": {
+    "title": "English Self-Study Space",
+    "description": "Spaced repetition flashcards, personal vocabulary sets, and streak tracking.",
+    "mySets": "My Vocabulary Sets",
+    "createSet": "Create New Set",
+    "startReview": "Start Review",
+    "streakDays": "{count} day streak",
+    "dailyGoal": "Daily Goal: 20 words"
+  }
+}

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Penguin Body / Head Silhouette -->
+  <circle cx="60" cy="60" r="56" fill="#EAF4FC"/>
+  <!-- Dark Slate Body -->
+  <path d="M60 16C42.3269 16 28 30.3269 28 48C28 66 32 86 40 100C46 102 74 102 80 100C88 86 92 66 92 48C92 30.3269 77.6731 16 60 16Z" fill="#1B2A38"/>
+  <!-- White Belly (Arctic Snow) -->
+  <path d="M60 38C48.9543 38 42 50 42 66C42 82 48 96 60 96C72 96 78 82 78 66C78 50 71.0457 38 60 38Z" fill="#F8FBFF"/>
+  <!-- Eyes -->
+  <ellipse cx="50" cy="46" rx="4" ry="5.5" fill="#1B2A38"/>
+  <circle cx="51.5" cy="44.5" r="1.5" fill="#FFFFFF"/>
+  <ellipse cx="70" cy="46" rx="4" ry="5.5" fill="#1B2A38"/>
+  <circle cx="71.5" cy="44.5" r="1.5" fill="#FFFFFF"/>
+  <!-- Orange Beak (#FF7A00) -->
+  <path d="M60 52L53 59C53 62 67 62 67 59L60 52Z" fill="#FF7A00"/>
+  <!-- Orange Feet (#FF7A00) -->
+  <ellipse cx="46" cy="101" rx="9" ry="4" fill="#FF7A00"/>
+  <ellipse cx="74" cy="101" rx="9" ry="4" fill="#FF7A00"/>
+  <!-- Graduation / Educator Cap with Glacier Blue accent -->
+  <path d="M60 10L32 22L60 34L88 22L60 10Z" fill="#0EA5E9"/>
+  <path d="M42 27V38C42 43 78 43 78 38V27" fill="#0284C7"/>
+  <path d="M84 24V40" stroke="#FF7A00" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="84" cy="41" r="2" fill="#FF7A00"/>
+</svg>

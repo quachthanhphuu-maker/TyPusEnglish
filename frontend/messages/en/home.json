@@ -1,0 +1,180 @@
+{
+  "navbar": {
+    "home": "Home",
+    "classroom": "Classes & Tutoring",
+    "englishHub": "English Self-Study",
+    "aiLab": "AI Interactive Lab",
+    "pricing": "Pricing",
+    "switchLang": "VI",
+    "cta": "Get Started"
+  },
+  "chapters": {
+    "scrollHint": "Scroll to walk into the classroom",
+    "ch1": {
+      "badge": "Next-Gen Open Classroom 2026",
+      "title": "TyPusEnglish.",
+      "description": "Step into your personalized open classroom. A comprehensive bilingual platform for independent tutors, school teachers, and self-directed learners.",
+      "ctaTutor": "Start Tutoring / Teaching",
+      "ctaEnglish": "Free English Self-Study"
+    },
+    "ch2": {
+      "badge": "Flexible Class Scale & Transparency",
+      "title": "From 1-on-1 to 50+ Student Classes.",
+      "description": "Import rosters with CSV/Excel, mark one-tap attendance, maintain lesson logs, and issue private child-specific links for verified parent tracking.",
+      "cta": "Explore Teaching Hub"
+    },
+    "ch3": {
+      "badge": "Visual Interactive Learning Tech",
+      "title": "AI Multi-Subject Interactive Room.",
+      "description": "Human-reviewed AI exam generator across Math, Physics, Chemistry, and English; interactive 3D spatial geometry, and simulated physical experiments.",
+      "cta": "Student Portal",
+      "ctaExplore": "Explore AI Tools"
+    },
+    "ch4": {
+      "badge": "Barrier-Free Independent Study",
+      "title": "Free Daily English Self-Study.",
+      "description": "Personal vocabulary vault, spaced-repetition flashcards (SM-2), and daily streak tracker—completely independent of any class membership.",
+      "cta": "Start Vocabulary Review"
+    }
+  },
+  "spaces": {
+    "sectionBadge": "Dual Ecosystem",
+    "sectionTitle": "Two Spaces In One Unified Platform",
+    "sectionSubtitle": "Choose your journey: professional classroom operations or completely free self-paced study.",
+    "classroom": {
+      "tag": "For Educators & Parents",
+      "title": "Teaching & Classroom Hub",
+      "subtitle": "Operate independent classes from 1-on-1 tutoring to large school cohorts of 50+ students.",
+      "point1": "Create student profiles without mandatory email; link accounts seamlessly",
+      "point2": "Bulk attendance marking, attendance history & private lesson notes",
+      "point3": "Tuition ledger, balance derivation & immutable transaction records",
+      "point4": "Publish verified periodic snapshots to linked parents with audit trails",
+      "cta": "Launch Teaching Workspace"
+    },
+    "english": {
+      "tag": "Always Free for Every Learner",
+      "title": "Open English Learning Hub",
+      "subtitle": "Personal English study space without requiring any classroom membership.",
+      "point1": "Create and manage custom vocabulary sets with CSV import/export",
+      "point2": "Spaced repetition (SM-2) algorithm for long-term active recall",
+      "point3": "Local-day streak calculation and daily learning goals",
+      "point4": "Accept shared class vocabulary sets as private personal copies",
+      "cta": "Open Self-Study Hub"
+    },
+    "aiLab": {
+      "tag": "Smart Automation",
+      "title": "Pro AI & Interactive Lab",
+      "subtitle": "Generative assessment tools and visual simulations to empower modern teaching.",
+      "point1": "AI drafts complete exams across Math, Physics, Chemistry, and English",
+      "point2": "Mandatory educator review before saving to question bank or assigning",
+      "point3": "Interactive 3D geometry with spatial rotation and cross-section inspection",
+      "point4": "Real-time physics and chemistry experiment simulations",
+      "cta": "Explore AI Lab"
+    }
+  },
+  "workflow": {
+    "sectionBadge": "Standardized Workflow",
+    "sectionTitle": "4 Steps to Transparent & Structured Teaching",
+    "sectionSubtitle": "Save 80% of administrative overhead and focus on high-impact instruction.",
+    "step1": {
+      "title": "Create Class & Add Students",
+      "desc": "Set up 1-on-1 or small-group classes. Add profiles without email or import large rosters with Excel."
+    },
+    "step2": {
+      "title": "Log Lessons & Attendance",
+      "desc": "Mark Present, Absent, Late, or Excused in bulk. Keep private tutor notes strictly isolated."
+    },
+    "step3": {
+      "title": "Assign Work & Grade",
+      "desc": "Publish homework or versioned exams from the question bank. Auto-grade multiple-choice answers."
+    },
+    "step4": {
+      "title": "Publish Parent Reports",
+      "desc": "Generate immutable snapshot reports for verified linked parents, keeping tuition records private."
+    }
+  },
+  "aiSubjects": {
+    "sectionBadge": "Visual STEM & Language Tools",
+    "sectionTitle": "Simulations & Interactive Laboratories",
+    "sectionSubtitle": "Empower deep comprehension over memorization through real-time interactive models.",
+    "math": {
+      "name": "3D Geometry",
+      "badge": "Spatial Math",
+      "title": "Polyhedron & Sphere Spatial Inspection",
+      "desc": "Rotate, slice, and inspect cross-sections of 3D solids in an intuitive 3-dimensional viewport."
+    },
+    "chem": {
+      "name": "Chemistry",
+      "badge": "Molecular Models",
+      "title": "Bonding Structures & Reaction Balance",
+      "desc": "Explore electron configurations, crystal lattices, and interactive reaction conservation principles."
+    },
+    "phys": {
+      "name": "Physics",
+      "badge": "Virtual Labs",
+      "title": "Mechanical Oscillations & Optics",
+      "desc": "Simulate pendulums, ray optics refraction, and AC circuit dynamics with real-time parameter tuning."
+    },
+    "eng": {
+      "name": "English",
+      "badge": "Language AI",
+      "title": "Contextual Reading & Grammar Generation",
+      "desc": "Generate CEFR/IELTS-aligned reading passages and differentiated question items with thorough rationale."
+    }
+  },
+  "pricing": {
+    "sectionBadge": "Transparent Pricing",
+    "sectionTitle": "Choose The Right Tier For You",
+    "sectionSubtitle": "English Self-Study is 100% FREE. Independent educators upgrade to Pro for AI generative authoring.",
+    "basic": {
+      "name": "Basic (Free)",
+      "price": "$0",
+      "period": "/ lifetime",
+      "desc": "For independent tutors and personal English self-learners.",
+      "feat1": "Unlimited 1-on-1 and small-group tutoring classes",
+      "feat2": "Attendance logging, lesson records & manual tuition ledger",
+      "feat3": "Manual question bank & online assignment submissions",
+      "feat4": "Periodic verified parent snapshot reports",
+      "feat5": "English Hub: SM-2 Spaced Repetition flashcards & streaks",
+      "cta": "Get Started Free"
+    },
+    "pro": {
+      "name": "Pro Educator (AI)",
+      "price": "$7.99",
+      "period": "/ month",
+      "desc": "For professional educators requiring AI-accelerated curriculum authoring.",
+      "feat1": "Everything in Basic plan included",
+      "feat2": "AI generative exam authoring for Math, Physics, Chem & English",
+      "feat3": "Unlimited regeneration, draft editing and rubric refinement",
+      "feat4": "Large cohort roster import (50+ students via Excel/CSV)",
+      "feat5": "Interactive 3D geometry & subject simulation lab access",
+      "feat6": "Extended audit retention & priority support",
+      "cta": "Upgrade to Pro"
+    }
+  },
+  "footer": {
+    "tagline": "Next-generation bilingual teaching and open English learning toolkit for tutors, teachers, and learners.",
+    "classroomCol": {
+      "title": "Teaching & Classroom",
+      "link1": "Tutor Workspace",
+      "link2": "Class & Student Profiles",
+      "link3": "Tuition Ledger",
+      "link4": "Parent Portal"
+    },
+    "englishCol": {
+      "title": "English Self-Study",
+      "link1": "Personal Vocabulary Vault",
+      "link2": "Spaced Repetition Flashcards",
+      "link3": "Daily Streak Tracker",
+      "link4": "Practice & Quizzes"
+    },
+    "trustCol": {
+      "title": "Privacy & Trust",
+      "link1": "Minor Student Data Protection",
+      "link2": "Isolated Multi-Tenant Security",
+      "link3": "Encryption & Verification",
+      "link4": "Terms of Service"
+    },
+    "copyright": "© 2026 TyPusEnglish. All rights reserved. Strict compliance with student data privacy standards."
+  }
+}

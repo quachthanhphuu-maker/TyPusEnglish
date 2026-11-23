@@ -1,0 +1,180 @@
+{
+  "navbar": {
+    "home": "Trang chủ",
+    "classroom": "Lớp học & Gia sư",
+    "englishHub": "Tự học Tiếng Anh",
+    "aiLab": "Phòng tương tác AI",
+    "pricing": "Bảng giá",
+    "switchLang": "EN",
+    "cta": "Bắt đầu ngay"
+  },
+  "chapters": {
+    "scrollHint": "Cuộn chuột để bước vào lớp học",
+    "ch1": {
+      "badge": "Lớp học mở thế hệ mới 2026",
+      "title": "TyPusEnglish.",
+      "description": "Bước vào lớp học mở của riêng bạn. Nền tảng giáo dục song ngữ toàn diện cho Gia sư, Giáo viên trường và Người tự học độc lập.",
+      "ctaTutor": "Mở lớp Gia sư / Giáo viên",
+      "ctaEnglish": "Tự học Tiếng Anh miễn phí"
+    },
+    "ch2": {
+      "badge": "Quy mô lớp linh hoạt & Minh bạch",
+      "title": "Từ lớp 1-1 đến lớp 50+ học sinh.",
+      "description": "Nhập danh sách học sinh bằng CSV/Excel, điểm danh nhanh một chạm, ghi nhận nhật ký buổi học và cấp mã liên kết riêng cho phụ huynh theo dõi minh bạch.",
+      "cta": "Khám phá Hub Giảng dạy"
+    },
+    "ch3": {
+      "badge": "Công nghệ giảng dạy trực quan",
+      "title": "Phòng học tương tác đa môn AI.",
+      "description": "AI soạn đề thi có duyệt cho Toán, Lý, Hóa, Anh; dựng hình không gian 3D Toán học, mô phỏng phản ứng Hóa học và thí nghiệm Vật lý sinh động.",
+      "cta": "Khu vực Học sinh",
+      "ctaExplore": "Xem công cụ AI"
+    },
+    "ch4": {
+      "badge": "Tự do học tập không rào cản",
+      "title": "Tự học Tiếng Anh miễn phí mỗi ngày.",
+      "description": "Kho từ vựng cá nhân, Flashcard lặp lại ngắt quãng (Spaced Repetition) và chuỗi Streak bền bỉ không cần thông qua gia sư.",
+      "cta": "Bắt đầu Ôn từ vựng ngay"
+    }
+  },
+  "spaces": {
+    "sectionBadge": "Hệ sinh thái kép",
+    "sectionTitle": "Hai Không Gian Trong Một Nền Tảng",
+    "sectionSubtitle": "Dạy học chuyên nghiệp với quy trình khép kín, hoặc Tự học tiếng Anh độc lập hoàn toàn miễn phí.",
+    "classroom": {
+      "tag": "Dành cho Gia sư & Giáo viên",
+      "title": "Teaching & Classroom Hub",
+      "subtitle": "Vận hành lớp học độc lập từ gia sư kèm 1-1 đến lớp học trường 50+ học sinh.",
+      "point1": "Tạo hồ sơ học sinh không cần email, chuyển đổi tài khoản mượt mà",
+      "point2": "Điểm danh hàng loạt, ghi nhận chuyên cần & nhận xét riêng",
+      "point3": "Quản lý số dư học phí, ghi nhận thanh toán & hoàn tiền an toàn",
+      "point4": "Xuất bản báo cáo định kỳ cho phụ huynh có mã liên kết riêng",
+      "cta": "Quản lý Lớp học ngay"
+    },
+    "english": {
+      "tag": "Miễn phí cho Mọi người học",
+      "title": "Open English Learning Hub",
+      "subtitle": "Không gian tự học tiếng Anh cá nhân, hoàn toàn không ràng buộc lớp học.",
+      "point1": "Tự tạo & nhập xuất bộ từ vựng cá nhân theo nhu cầu",
+      "point2": "Thuật toán lặp lại ngắt quãng Spaced Repetition thông minh",
+      "point3": "Ghi nhận chuỗi ngày học Streak theo múi giờ người học",
+      "point4": "Nhận bộ từ vựng chia sẻ từ giáo viên làm bản sao riêng",
+      "cta": "Vào Không gian Tự học"
+    },
+    "aiLab": {
+      "tag": "Trợ lực công nghệ",
+      "title": "Pro AI & Interactive Lab",
+      "subtitle": "Soạn thảo đề kiểm tra thông minh và các mô hình thí nghiệm trực quan.",
+      "point1": "AI soạn đề thi Toán, Lý, Hóa, Anh kèm đáp án và lời giải chi tiết",
+      "point2": "Giáo viên bắt buộc duyệt, chỉnh sửa hoặc tái tạo trước khi giao bài",
+      "point3": "Mô phỏng hình học không gian 3D tương tác góc nhìn đa chiều",
+      "point4": "Mô phỏng phản ứng Hóa học và hiện tượng Vật lý theo thông số thực tế",
+      "cta": "Khám phá phòng AI"
+    }
+  },
+  "workflow": {
+    "sectionBadge": "Quy trình chuẩn hóa",
+    "sectionTitle": "4 Bước Dạy Học Minh Bạch & Chuẩn Mực",
+    "sectionSubtitle": "Tiết kiệm 80% thời gian quản trị giấy tờ để tập trung vào chất lượng giảng dạy.",
+    "step1": {
+      "title": "Tạo lớp & Thêm học sinh",
+      "desc": "Thiết lập lớp 1-1 hoặc nhóm, thêm học sinh không cần bắt buộc email hoặc import danh sách 50+ học sinh."
+    },
+    "step2": {
+      "title": "Ghi nhận buổi học & Điểm danh",
+      "desc": "Điểm danh Present, Absent, Late hoặc Excused; ghi chép nội dung đã dạy và lưu nhận xét riêng tư."
+    },
+    "step3": {
+      "title": "Giao bài tập & Chấm điểm",
+      "desc": "Sử dụng ngân hàng đề thi hoặc soạn đề nhanh; tự động chấm câu hỏi trắc nghiệm và chấm tự luận linh hoạt."
+    },
+    "step4": {
+      "title": "Xuất bản báo cáo phụ huynh",
+      "desc": "Tạo bản chụp báo cáo bất biến gửi tới phụ huynh có mã liên kết; bảo mật số dư học phí và ghi chú riêng."
+    }
+  },
+  "aiSubjects": {
+    "sectionBadge": "Công cụ giảng dạy đa môn",
+    "sectionTitle": "Phòng Thí Nghiệm & Mô Phỏng Trực Quan",
+    "sectionSubtitle": "Giúp học sinh hiểu bản chất thay vì học vẹt qua các mô hình tương tác thời gian thực.",
+    "math": {
+      "name": "Toán học 3D",
+      "badge": "Hình học không gian",
+      "title": "Tương tác khối đa diện & mặt cầu 3D",
+      "desc": "Xoay, cắt lát và quan sát thiết diện hình học không gian trực quan trong môi trường 3 chiều sống động."
+    },
+    "chem": {
+      "name": "Hóa học",
+      "badge": "Mô phỏng phân tử",
+      "title": "Cấu trúc liên kết & Cân bằng phản ứng",
+      "desc": "Quan sát cấu trúc electron, mạng tinh thể và kiểm nghiệm định luật bảo toàn khối lượng tương tác."
+    },
+    "phys": {
+      "name": "Vật lý",
+      "badge": "Thí nghiệm ảo",
+      "title": "Dao động cơ học & Quang hình học",
+      "desc": "Mô phỏng chuyển động con lắc, hiện tượng khúc xạ ánh sáng và mạch điện xoay chiều theo tham số tùy chỉnh."
+    },
+    "eng": {
+      "name": "Tiếng Anh",
+      "badge": "AI Ngôn ngữ",
+      "title": "Soạn đề đọc hiểu & Ngữ pháp ngữ cảnh",
+      "desc": "Tạo đoạn văn đọc hiểu, câu hỏi ngữ pháp phân hóa theo chuẩn CEFR/IELTS kèm giải thích cặn kẽ."
+    }
+  },
+  "pricing": {
+    "sectionBadge": "Bảng giá rõ ràng",
+    "sectionTitle": "Chọn Gói Phù Hợp Với Bạn",
+    "sectionSubtitle": "Không gian Tự học Tiếng Anh hoàn toàn MIỄN PHÍ. Gia sư nâng cấp Pro khi cần trợ lực AI soạn đề.",
+    "basic": {
+      "name": "Basic (Miễn Phí)",
+      "price": "0 ₫",
+      "period": "/ trọn đời",
+      "desc": "Dành cho gia sư độc lập và người tự học tiếng Anh cá nhân.",
+      "feat1": "Quản lý lớp học 1-1 và nhóm nhỏ không giới hạn",
+      "feat2": "Điểm danh, ghi chú buổi học & theo dõi học phí",
+      "feat3": "Ngân hàng đề thi thủ công & giao bài tập trực tuyến",
+      "feat4": "Báo cáo phụ huynh định kỳ có mã xác thực",
+      "feat5": "Tự học tiếng Anh: Flashcard SM-2 & Streak cá nhân",
+      "cta": "Bắt đầu Miễn Phí"
+    },
+    "pro": {
+      "name": "Pro Educator (AI)",
+      "price": "149.000 ₫",
+      "period": "/ tháng",
+      "desc": "Dành cho giáo viên và gia sư chuyên nghiệp cần bứt phá năng suất với AI.",
+      "feat1": "Bao gồm toàn bộ tính năng của gói Basic",
+      "feat2": "AI tạo đề thi tự động 4 môn (Toán, Lý, Hóa, Anh) có lời giải",
+      "feat3": "Tái tạo & chỉnh sửa câu hỏi không giới hạn",
+      "feat4": "Nhập danh sách học sinh trường 50+ học sinh bằng Excel/CSV",
+      "feat5": "Mô phỏng hình học không gian 3D & phòng thí nghiệm tương tác",
+      "feat6": "Lưu trữ dữ liệu học tập nâng cao & ưu tiên hỗ trợ",
+      "cta": "Nâng cấp Pro Ngay"
+    }
+  },
+  "footer": {
+    "tagline": "Bộ công cụ song ngữ, đa môn học thế hệ mới dành cho Gia sư, Giáo viên và Người tự học Tiếng Anh.",
+    "classroomCol": {
+      "title": "Giảng Dạy & Lớp Học",
+      "link1": "Bàn làm việc Gia sư",
+      "link2": "Quản lý Lớp & Hồ sơ",
+      "link3": "Theo dõi Học phí",
+      "link4": "Cổng thông tin Phụ huynh"
+    },
+    "englishCol": {
+      "title": "Tự Học Tiếng Anh",
+      "link1": "Kho từ vựng cá nhân",
+      "link2": "Thẻ Flashcard Spaced Repetition",
+      "link3": "Theo dõi Streak hàng ngày",
+      "link4": "Luyện tập & Kiểm tra"
+    },
+    "trustCol": {
+      "title": "Bảo Mật & Quy Chuẩn",
+      "link1": "Chính sách bảo mật trẻ em",
+      "link2": "Kiến trúc dữ liệu cách ly",
+      "link3": "Mã hóa & Xác thực an toàn",
+      "link4": "Điều khoản dịch vụ"
+    },
+    "copyright": "© 2026 TyPusEnglish. Bản quyền thuộc về đội ngũ phát triển. Tuân thủ tiêu chuẩn bảo vệ dữ liệu học sinh."
+  }
+}
