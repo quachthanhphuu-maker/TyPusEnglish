@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { motion, useReducedMotion, type Variants } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import type { InteractivePenguinProps, PenguinState } from './auth-types';
+import type { InteractivePenguinProps } from './auth-types';
 
 export function InteractivePenguin({
   state = 'idle',
@@ -14,36 +14,62 @@ export function InteractivePenguin({
 
   // Left flipper motion variants
   const leftFlipperVariants: Variants = {
-    initial: { rotate: [0, -10, 0], y: [0, -2, 0], transition: { duration: 1.5, repeat: Infinity } },
-    idle: { rotate: [0, -3, 0], y: [0, -1, 0], transition: { duration: 2.5, repeat: Infinity, ease: 'easeInOut' } },
+    initial: {
+      rotate: [0, -12, 2, -8, 0],
+      y: [0, -3, 1, -2, 0],
+      transition: { duration: 2.2, repeat: Infinity, ease: 'easeInOut' },
+    },
+    idle: {
+      rotate: [0, -8, 2, -6, 0],
+      y: [0, -3, 1, -2, 0],
+      transition: { duration: 3.2, repeat: Infinity, ease: 'easeInOut' },
+    },
     username_focus: { rotate: 8, x: -3, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
     password_focus: { rotate: -115, x: 20, y: -28, transition: { duration: 0.35, ease: 'backOut' } },
     password_visible: { rotate: -95, x: 14, y: -22, transition: { duration: 0.3, ease: 'easeOut' } },
     loading: { rotate: [-10, 5, -10], y: [0, -4, 0], transition: { duration: 1.2, repeat: Infinity, ease: 'easeInOut' } },
-    success: { rotate: -140, x: -10, y: -25, transition: { type: 'spring', damping: 10, stiffness: 180 } },
+    success: {
+      rotate: [-130, -145, -130],
+      x: -10,
+      y: [-22, -30, -22],
+      transition: { duration: 0.6, repeat: Infinity, ease: 'easeInOut' },
+    },
     register_mode: { rotate: -40, x: 8, y: -12, transition: { duration: 0.4, ease: 'easeOut' } },
   };
 
-  // Right flipper motion variants
+  // Right flipper motion variants (Autonomous waving "Hi!" and breathing)
   const rightFlipperVariants: Variants = {
-    initial: { rotate: [0, 45, 10, 40, 0], y: [0, -12, -4, -10, 0], transition: { duration: 2, repeat: Infinity, ease: 'easeInOut' } },
-    idle: { rotate: [0, 3, 0], y: [0, -1, 0], transition: { duration: 2.5, repeat: Infinity, ease: 'easeInOut' } },
+    initial: {
+      rotate: [0, 42, 12, 38, 0],
+      y: [0, -12, -4, -10, 0],
+      transition: { duration: 1.8, repeat: Infinity, ease: 'easeInOut' },
+    },
+    idle: {
+      rotate: [0, 24, 6, 20, 0],
+      y: [0, -7, -2, -6, 0],
+      transition: { duration: 2.8, repeat: Infinity, ease: 'easeInOut' },
+    },
     username_focus: { rotate: -5, x: -2, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
     password_focus: { rotate: 115, x: -20, y: -28, transition: { duration: 0.35, ease: 'backOut' } },
     password_visible: { rotate: 30, x: -6, y: -4, transition: { duration: 0.35, ease: 'backOut' } },
     loading: { rotate: [5, -10, 5], y: [0, -4, 0], transition: { duration: 1.2, repeat: Infinity, ease: 'easeInOut' } },
-    success: { rotate: 140, x: 10, y: -25, transition: { type: 'spring', damping: 10, stiffness: 180 } },
+    success: {
+      rotate: [130, 145, 130],
+      x: 10,
+      y: [-22, -30, -22],
+      transition: { duration: 0.6, repeat: Infinity, ease: 'easeInOut' },
+    },
     register_mode: { rotate: 40, x: -8, y: -12, transition: { duration: 0.4, ease: 'easeOut' } },
   };
 
-  // Pupils gaze offset variants
+  // Pupils gaze offset variants (Autonomously looking around and focusing)
   const pupilVariants: Variants = {
-    initial: { x: 0, y: 0 },
-    idle: { x: 0, y: 0 },
-    username_focus: { x: -4, y: 1 },
+    initial: { x: [-1, 2, -1], y: [0, -1, 0], transition: { duration: 2.5, repeat: Infinity } },
+    idle: { x: [0, -2, 0, 2, 0], y: [0, 1, 0, -1, 0], transition: { duration: 4, repeat: Infinity } },
+    username_focus: { x: -4, y: 1, transition: { duration: 0.25 } },
     password_focus: { x: 0, y: 0 },
     password_visible: { x: -3.5, y: 0.5 },
-    loading: { x: [0, 2, -2, 0], y: [-1, 1, -1, 0], transition: { duration: 2, repeat: Infinity } },
+    loading: { x: [0, 2, -2, 0], y: [-1, 1, -1, 0], transition: { duration: 1.5, repeat: Infinity } },
     success: { x: 0, y: -1 },
     register_mode: { x: 0, y: 0 },
   };
@@ -52,21 +78,29 @@ export function InteractivePenguin({
   const eyeBlinkVariants: Variants = {
     idle: {
       scaleY: [1, 1, 0.1, 1, 1, 1, 1, 0.1, 1],
-      transition: { duration: 5, repeat: Infinity, times: [0, 0.45, 0.48, 0.52, 0.8, 0.82, 0.85, 0.88, 1] },
+      transition: { duration: 4.5, repeat: Infinity, times: [0, 0.45, 0.48, 0.52, 0.78, 0.81, 0.84, 0.87, 1] },
     },
     success: { scaleY: 0.2, transition: { duration: 0.2 } },
   };
 
-  // Whole character body breathing / bouncing
+  // Whole character body breathing / joyful bouncing
   const bodyVariants: Variants = {
-    initial: { y: [0, -6, 0], transition: { duration: 2, repeat: Infinity, ease: 'easeInOut' } },
-    idle: { y: [0, -4, 0], transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' } },
+    initial: { y: [0, -6, 0], transition: { duration: 1.8, repeat: Infinity, ease: 'easeInOut' } },
+    idle: {
+      y: [0, -6, 0],
+      rotate: [-0.8, 0.8, -0.8],
+      transition: { duration: 3.2, repeat: Infinity, ease: 'easeInOut' },
+    },
     username_focus: { y: 0, rotate: -2, transition: { duration: 0.35 } },
     password_focus: { y: 2, rotate: 0, transition: { duration: 0.3 } },
     password_visible: { y: 1, rotate: -1.5, transition: { duration: 0.3 } },
-    loading: { y: [0, -3, 0], transition: { duration: 0.8, repeat: Infinity, ease: 'easeInOut' } },
-    success: { y: [0, -18, 0, -10, 0], transition: { duration: 0.9, repeat: Infinity, ease: 'easeInOut' } },
-    register_mode: { y: [0, -4, 0], transition: { duration: 2.8, repeat: Infinity, ease: 'easeInOut' } },
+    loading: { y: [0, -4, 0], transition: { duration: 0.8, repeat: Infinity, ease: 'easeInOut' } },
+    success: {
+      y: [0, -20, 0, -14, 0],
+      scale: [1, 1.05, 1, 1.03, 1],
+      transition: { duration: 0.75, repeat: Infinity, ease: 'easeInOut' },
+    },
+    register_mode: { y: [0, -5, 0], transition: { duration: 2.8, repeat: Infinity, ease: 'easeInOut' } },
   };
 
   const isHappyEyes = state === 'success';
@@ -216,7 +250,7 @@ export function InteractivePenguin({
             {/* Left Eye */}
             <g id="left-eye" className="origin-[100px_94px]">
               {isHappyEyes ? (
-                <path d="M92 97C95 91 105 91 108 97" stroke="#1B2A38" strokeWidth="3" strokeLinecap="round" fill="none" />
+                <path d="M92 97C95 91 105 91 108 97" stroke="#1B2A38" strokeWidth="3.5" strokeLinecap="round" fill="none" />
               ) : (
                 <motion.g
                   variants={shouldReduceMotion ? undefined : eyeBlinkVariants}
@@ -241,7 +275,7 @@ export function InteractivePenguin({
             {/* Right Eye */}
             <g id="right-eye" className="origin-[140px_94px]">
               {isHappyEyes ? (
-                <path d="M132 97C135 91 145 91 148 97" stroke="#1B2A38" strokeWidth="3" strokeLinecap="round" fill="none" />
+                <path d="M132 97C135 91 145 91 148 97" stroke="#1B2A38" strokeWidth="3.5" strokeLinecap="round" fill="none" />
               ) : (
                 <motion.g
                   variants={shouldReduceMotion ? undefined : eyeBlinkVariants}
@@ -315,9 +349,9 @@ export function InteractivePenguin({
           {state === 'password_visible' && '👀 Ồ, bạn đang kiểm tra lại mật khẩu đúng không?'}
           {state === 'username_focus' && '✍️ Chào mừng bạn! Hãy nhập thông tin đăng nhập.'}
           {state === 'loading' && '⏳ Đang xác thực thông tin tài khoản...'}
-          {state === 'success' && '🎉 Xác thực thành công! Đang chuyển hướng...'}
+          {state === 'success' && '🎉 Tuyệt vời! Xác thực thành công!'}
           {state === 'register_mode' && '📖 Chào mừng thành viên mới đến với TyPusEnglish!'}
-          {(state === 'idle' || state === 'initial') && '❄️ Không gian giáo dục song ngữ thông minh TyPusEnglish'}
+          {(state === 'idle' || state === 'initial') && '👋 Chào bạn! Hãy đăng nhập để tiếp tục hành trình học tiếng Anh.'}
         </p>
       </div>
     </div>
