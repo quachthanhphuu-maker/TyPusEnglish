@@ -7,7 +7,7 @@ Use PostgreSQL and Prisma. [PRD.md](PRD.md) defines product scope.
 
 | Area | Records and invariants |
 | --- | --- |
-| Accounts | Auth.js `User`, `Account`, `VerificationToken`, and revocable database `Session` belong to Accounts. `UserRole` supports multiple roles and is unique per `(userId, role)`. `UserPreference` stores the optional active workspace. `RateLimitBucket` stores hashed identifiers in persistent fixed windows. `Entitlement` belongs to Entitlements. |
+| Accounts | Auth.js `User`, `Account`, and encrypted-cookie JWT session registry `Session` belong to Accounts. `User.username` is optional and unique; `passwordHash` is nullable Argon2id. `AccountToken` stores only hashed, single-use email verification/reset tokens with a 15-minute lifetime. `UserRole` supports multiple roles and is unique per `(userId, role)`. `UserPreference` stores the optional active workspace. `RateLimitBucket` stores hashed identifiers in persistent fixed windows. `Entitlement` belongs to Entitlements. |
 | Classes | `Class` stores owner, subject, grade level, and class type. `StudentProfile` has `ownerTutorId` and optional `userId`. Enforce unique `(ownerTutorId, userId)` when linked. `Enrollment` is unique per class and student profile. |
 | Invitations | `ClassInvitation` and `ParentInvitation` store token digests and lifecycle state. Redeem parent invitations atomically. Enforce one active `ParentLink` per parent and enrollment. |
 | Lessons | `Lesson`, `Attendance`, `PrivateLessonNote`, and `ParentLessonFeedback`. Attendance is unique per lesson and enrollment. Parent-facing queries cannot read private notes. |
@@ -27,10 +27,13 @@ score differs from zero. Store event instants in UTC and retain the
 relevant IANA timezone for lessons, billing, and learner-local dates.
 
 Accounts sessions store `createdAt`, `lastActivityAt`, and
-`absoluteExpiresAt`. Enforce seven days of inactivity and a 30-day absolute
-lifetime in the Accounts adapter; Auth.js's rolling `expires` value alone
-does not enforce the absolute cap. Email verification tokens are single-use
-and expire after 15 minutes. Store rate-limit identifiers as HMAC digests.
+`absoluteExpiresAt`. Auth.js v4 Credentials requires JWT sessions, so Accounts
+uses its encrypted JWE cookie with only an opaque session ID; every session
+read checks and touches the PostgreSQL registry. Enforce seven days of
+inactivity and a 30-day absolute lifetime in Accounts; Auth.js's rolling
+cookie expiry alone does not enforce either limit. Email verification and
+password-reset tokens are single-use, stored as SHA-256 digests, and expire
+after 15 minutes. Store rate-limit identifiers as HMAC digests.
 
 `ClassInvitation` and `ParentInvitation` remain owned by Classes. Classes
 validates recipient, class/profile scope, expiration, revocation, and

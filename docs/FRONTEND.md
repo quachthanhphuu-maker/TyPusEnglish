@@ -13,11 +13,14 @@ Dựa trên: [PRD.md](PRD.md) (v1.0), [ARCHITECTURE.md](ARCHITECTURE.md), [SECUR
 ```
 app/[locale]/
 ├── (auth)/
-│   ├── login/                        # Đăng nhập bằng Email Magic Link
+│   ├── login/                        # Username/password, Google, or Zalo sign-in
 │   ├── register/                     # Public Tutor / Independent Learner registration
 │   ├── onboarding/                   # Choose first self-service workspace
 │   ├── workspace/                    # Select and switch among authorized roles
-│   ├── verify-request/               # Thông báo đã gửi magic link
+│   ├── verify-email/                 # Confirm one-use email verification token
+│   ├── forgot-password/              # Request a password reset email
+│   ├── reset-password/               # Set a new password with a one-use token
+│   ├── account-security/             # Link/unlink OAuth providers and verify email
 │   └── invite/                       # Classes-owned invitation acceptance routes
 │
 ├── (portals)/
@@ -167,8 +170,10 @@ It deliberately omits session tokens and sensitive database fields:
 type UserRole = 'tutor' | 'student' | 'parent' | 'independent_learner';
 interface UserDTO {
   id: string;
-  email: string;
+  email: string | null;
+  username: string | null;
   name: string | null;
+  authMethods: ('password' | 'google' | 'zalo')[];
   roles: UserRole[];
   onboardingStatus: 'NOT_STARTED' | 'COMPLETE';
   activeWorkspace: UserRole | null;
@@ -179,18 +184,35 @@ type AuthStatus =
   | { status: 'authenticated'; session: SessionDTO };
 ```
 
-The former single-role `UserSession.role` has been replaced by
-`UserDTO.roles[]`; the compatibility alias `UserSession` points to `UserDTO`
-and does not retain a singular `role` property. Update consumers to handle
-zero, one, or multiple roles.
+The former single-role `UserSession.role` contract is replaced by
+`UserDTO.roles[]`; consumers should use `UserDTO` and handle zero, one, or
+multiple roles.
+
+`SessionDTO` contains only `user` and an expiry timestamp. The encrypted
+Auth.js JWE cookie and random PostgreSQL session registry ID are server-only.
+Auth.js v4 Credentials requires JWT sessions, so the PostgreSQL registry
+enforces inactivity expiry, absolute expiry, and immediate revocation. Email
+magic-link sign-in is removed. Password registration verifies email through a
+single-use 15-minute token; reset tokens use the same expiry. OAuth provider
+account linking starts only from the signed-in Account Security page and never
+merges accounts by matching email. Zalo accounts may have a null email; adding
+an email requires verification before Classes can match an invitation.
 
 Server APIs include `getAuthStatus()`, `requireWorkspaceAccess(role, locale)`,
-`can(actor, action, resource)` (deny by default), and
-`grantVerifiedInvitationRole(tx, userId, role)`. Server Actions expose
-`completeOnboardingAction`, `addWorkspaceAction`, `selectWorkspaceAction`,
+`can(actor, action, resource)` (deny by default), `revokeUserSessions(userId)`,
+and `grantVerifiedInvitationRole(tx, userId, role)`. Server Actions expose
+`registerCredentialsAction`, `verifyEmailAction`,
+`requestPasswordResetAction`, `resetPasswordAction`,
+`addVerifiedEmailAction`, `unlinkOAuthAction`, onboarding/workspace actions,
 and `logoutAction`. Classes calls the invitation role grant only after it
 validates and redeems its invitation and links the existing profile inside
 the same transaction.
+
+Shared integration changes in this branch are `package.json`/`pnpm-lock.yaml`
+for the Argon2id runtime, `next.config.mjs` to externalize its native server
+binary, `.env.example` for SMTP and OAuth setup, and the existing bilingual
+`auth` namespace. The existing NextAuth route, middleware locale routing,
+portal layouts, and mock business-service factory remain in place.
 
 Invitation acceptance routes and persistence belong to the Classes module.
 They are not implemented by Accounts because this branch has no Classes
@@ -203,10 +225,11 @@ The localized Auth.js error route is `app/[locale]/auth/error/`, a sibling of
 the `(auth)` route group. Invitation routes shown in the sitemap are owned by
 Classes and need to be added when its invitation service is implemented.
 
-Safe error codes are `INVALID_EMAIL`, `RATE_LIMITED`, `LINK_INVALID`,
-`LINK_EXPIRED`, `INVITATION_INVALID`, `SESSION_EXPIRED`, `UNAUTHENTICATED`,
-`FORBIDDEN`, and `INTERNAL_ERROR`. Do not return Auth.js or database error
-messages to the browser.
+Safe error codes include `INVALID_EMAIL`, `INVALID_CREDENTIALS`,
+`EMAIL_NOT_VERIFIED`, `RATE_LIMITED`, `TOKEN_INVALID`, `TOKEN_EXPIRED`,
+`AUTH_METHOD_CONFLICT`, `AUTH_METHOD_REQUIRED`, `INVITATION_INVALID`,
+`SESSION_EXPIRED`, `UNAUTHENTICATED`, `FORBIDDEN`, and `INTERNAL_ERROR`.
+Do not return Auth.js or database error messages to the browser.
 
 After sign-in, zero roles go to `/${locale}/onboarding`; one role goes to its
 portal; multiple roles use `/${locale}/workspace` unless a still-authorized

@@ -21,6 +21,15 @@ export default async function AuthErrorPage({
     INVITATION_INVALID: 'invitationInvalid',
     SESSION_EXPIRED: 'sessionExpired',
     INTERNAL_ERROR: 'internal',
+    AUTH_METHOD_CONFLICT: 'authMethodConflict',
+    AUTH_METHOD_REQUIRED: 'authMethodRequired',
+    EMAIL_NOT_VERIFIED: 'emailNotVerified',
+    INVALID_CREDENTIALS: 'invalidCredentials',
+    INVALID_PASSWORD: 'invalidPassword',
+    INVALID_USERNAME: 'invalidUsername',
+    TOKEN_EXPIRED: 'tokenExpired',
+    TOKEN_INVALID: 'tokenInvalid',
+    USERNAME_UNAVAILABLE: 'usernameUnavailable',
   }[code];
 
   return (

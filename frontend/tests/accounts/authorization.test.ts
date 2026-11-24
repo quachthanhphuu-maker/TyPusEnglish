@@ -5,7 +5,9 @@ import { can } from '../../src/modules/accounts/lib/authorization';
 const tutor: UserDTO = {
   id: 'user_tutor',
   email: 'tutor@example.com',
+  username: 'tutor',
   name: 'Tutor',
+  authMethods: ['password'],
   roles: ['tutor', 'independent_learner'],
   onboardingStatus: 'COMPLETE',
   activeWorkspace: 'independent_learner',

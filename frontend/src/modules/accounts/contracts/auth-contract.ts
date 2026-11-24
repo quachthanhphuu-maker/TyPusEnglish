@@ -7,9 +7,23 @@ export const USER_ROLES = [
 
 export type UserRole = (typeof USER_ROLES)[number];
 export type OnboardingStatus = 'NOT_STARTED' | 'COMPLETE';
+export type AuthMethod = 'password' | 'google' | 'zalo';
+
+export function canRemoveAuthMethod(methods: AuthMethod[], method: AuthMethod): boolean {
+  return methods.includes(method) && methods.length > 1;
+}
 
 export type AuthErrorCode =
   | 'INVALID_EMAIL'
+  | 'INVALID_CREDENTIALS'
+  | 'EMAIL_NOT_VERIFIED'
+  | 'USERNAME_UNAVAILABLE'
+  | 'INVALID_USERNAME'
+  | 'INVALID_PASSWORD'
+  | 'AUTH_METHOD_CONFLICT'
+  | 'AUTH_METHOD_REQUIRED'
+  | 'TOKEN_INVALID'
+  | 'TOKEN_EXPIRED'
   | 'RATE_LIMITED'
   | 'LINK_INVALID'
   | 'LINK_EXPIRED'
@@ -21,8 +35,10 @@ export type AuthErrorCode =
 
 export interface UserDTO {
   id: string;
-  email: string;
+  email: string | null;
+  username: string | null;
   name: string | null;
+  authMethods: AuthMethod[];
   roles: UserRole[];
   onboardingStatus: OnboardingStatus;
   activeWorkspace: UserRole | null;
@@ -40,10 +56,13 @@ export type AuthStatus =
 export interface AuthProfileRecord {
   id: string;
   email: string | null;
+  username: string | null;
   name: string | null;
   onboardingStatus: OnboardingStatus;
   roles: Array<{ role: string }>;
   preference?: { activeWorkspaceRole: string | null } | null;
+  passwordHash?: string | null;
+  accounts?: Array<{ provider: string }>;
 }
 
 const databaseRoleToPublicRole: Record<string, UserRole> = {
@@ -72,8 +91,15 @@ export function toUserDTO(profile: AuthProfileRecord): UserDTO {
 
   return {
     id: profile.id,
-    email: profile.email ?? '',
+    email: profile.email,
+    username: profile.username,
     name: profile.name,
+    authMethods: Array.from(new Set([
+      ...(profile.passwordHash ? ['password' as const] : []),
+      ...(profile.accounts ?? [])
+        .map(({ provider }) => provider)
+        .filter((provider): provider is 'google' | 'zalo' => provider === 'google' || provider === 'zalo'),
+    ])),
     roles,
     onboardingStatus: profile.onboardingStatus,
     activeWorkspace: preferredRole && roles.includes(preferredRole) ? preferredRole : null,

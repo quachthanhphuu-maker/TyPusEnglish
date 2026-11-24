@@ -8,6 +8,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    serverComponentsExternalPackages: ['@node-rs/argon2'],
+  },
 };
 
 export default withNextIntl(nextConfig);
