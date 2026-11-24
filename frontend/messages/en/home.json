@@ -37,6 +37,34 @@
       "cta": "Start Vocabulary Review"
     }
   },
+  "orbitObjects": {
+    "clickToExplore": "Click to explore",
+    "geometry": {
+      "title": "3D Geometry & Mathematics",
+      "desc": "3D spatial simulation and interactive geometry models",
+      "action": "Explore AI Lab"
+    },
+    "chemistry": {
+      "title": "Science & AI Experiments",
+      "desc": "Interactive virtual science and chemical reaction lab",
+      "action": "View AI Lab"
+    },
+    "english": {
+      "title": "English Hub & Flashcards",
+      "desc": "Personal vocabulary vault and spaced-repetition streaks",
+      "action": "Enter Self-Study"
+    },
+    "curriculum": {
+      "title": "Curriculum & Lessons",
+      "desc": "Teaching logs, attendance records, and assignments",
+      "action": "Go to Classes"
+    },
+    "aiAssistant": {
+      "title": "Smart AI Tutor Assistant",
+      "desc": "Multi-subject lesson preparation and exam generator",
+      "action": "Learn More"
+    }
+  },
   "spaces": {
     "sectionBadge": "Dual Ecosystem",
     "sectionTitle": "Two Spaces In One Unified Platform",

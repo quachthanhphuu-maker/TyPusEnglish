@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useScroll, useReducedMotion, useTransform, motion } from 'framer-motion';
 import { ScrollTextOverlays } from '@/components/home/scroll-text-overlays';
+import { InteractiveOrbitingObjects } from '@/components/home/interactive-orbiting-objects';
 import { cn } from '@/lib/utils';
 
 interface ClassroomScrollCanvasProps {
@@ -55,8 +56,8 @@ export function ClassroomScrollCanvas({
       };
     };
 
-    // Preload first 5 frames + last frame immediately
-    for (let i = 0; i < Math.min(5, totalFrames); i++) {
+    // Preload first 8 frames + last frame immediately
+    for (let i = 0; i < Math.min(8, totalFrames); i++) {
       loadImage(i);
     }
     if (totalFrames > 1) {
@@ -65,7 +66,7 @@ export function ClassroomScrollCanvas({
 
     // Preload remaining frames
     const timer = setTimeout(() => {
-      for (let i = 5; i < totalFrames - 1; i++) {
+      for (let i = 8; i < totalFrames - 1; i++) {
         loadImage(i);
       }
     }, 100);
@@ -90,17 +91,21 @@ export function ClassroomScrollCanvas({
       const rect = canvas.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) return;
 
-      const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
+      const dpr = typeof window !== 'undefined' ? Math.max(window.devicePixelRatio || 1, 1) : 1;
       const targetW = Math.round(rect.width * dpr);
       const targetH = Math.round(rect.height * dpr);
 
       if (canvas.width !== targetW || canvas.height !== targetH) {
         canvas.width = targetW;
         canvas.height = targetH;
+        canvas.style.width = `${rect.width}px`;
+        canvas.style.height = `${rect.height}px`;
       }
 
       ctx.save();
       ctx.scale(dpr, dpr);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
 
       // Fallback: If no image frames provided, draw rich Arctic Snow-to-Classroom aura
       if (totalFrames === 0) {
@@ -263,7 +268,7 @@ export function ClassroomScrollCanvas({
   }, [totalFrames, prefersReducedMotion, scrollYProgress, loadedCount]);
 
   return (
-    <div ref={containerRef} className={cn('relative h-[220vh] w-full', className)}>
+    <div ref={containerRef} className={cn('relative h-[280vh] w-full', className)}>
       {/* Sticky Fullscreen Viewport - seamlessly releases down as soon as video finishes */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between select-none">
         {/* The 3D Animation Canvas */}
@@ -275,7 +280,7 @@ export function ClassroomScrollCanvas({
             currentFrameRef.current = 0;
             hasReachedEndRef.current = false;
           }}
-          className="absolute inset-0 z-0 w-full h-full block object-cover cursor-pointer"
+          className="absolute inset-0 z-0 w-full h-full block cursor-pointer"
         />
 
         {/* Subtle top edge fade under navbar */}
@@ -283,6 +288,9 @@ export function ClassroomScrollCanvas({
           style={{ opacity: vignetteOpacity }}
           className="absolute inset-x-0 top-0 h-24 z-[1] bg-gradient-to-b from-[#F8FBFF]/60 to-transparent pointer-events-none"
         />
+
+        {/* Interactive 3D Subject Objects orbiting the Penguin (Clickable) */}
+        <InteractiveOrbitingObjects scrollYProgress={scrollYProgress} />
 
         {/* Synced Story Chapter Text Overlays */}
         <ScrollTextOverlays

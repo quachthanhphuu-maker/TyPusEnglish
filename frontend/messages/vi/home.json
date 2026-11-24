@@ -37,6 +37,34 @@
       "cta": "Bắt đầu Ôn từ vựng ngay"
     }
   },
+  "orbitObjects": {
+    "clickToExplore": "Bấm để khám phá",
+    "geometry": {
+      "title": "Toán học & Hình học 3D",
+      "desc": "Mô phỏng không gian 3 chiều và bài tập sinh động",
+      "action": "Khám phá AI Lab"
+    },
+    "chemistry": {
+      "title": "Khoa học & Thí nghiệm AI",
+      "desc": "Phòng thực hành mô phỏng phản ứng Hóa - Lý",
+      "action": "Xem phòng Lab"
+    },
+    "english": {
+      "title": "Tiếng Anh & Flashcard",
+      "desc": "Kho từ vựng cá nhân và chuỗi ngày rèn luyện",
+      "action": "Vào Tự học"
+    },
+    "curriculum": {
+      "title": "Giáo trình & Bài học",
+      "desc": "Nhật ký giảng dạy, điểm danh và bài tập",
+      "action": "Vào Lớp học"
+    },
+    "aiAssistant": {
+      "title": "AI Trợ giảng Thông minh",
+      "desc": "Hỗ trợ soạn bài và giải đáp đa môn học",
+      "action": "Tìm hiểu thêm"
+    }
+  },
   "spaces": {
     "sectionBadge": "Hệ sinh thái kép",
     "sectionTitle": "Hai Không Gian Trong Một Nền Tảng",
