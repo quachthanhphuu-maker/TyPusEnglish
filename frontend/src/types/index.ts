@@ -1,11 +1,15 @@
-export type UserRole = 'tutor' | 'student' | 'parent' | 'independent_learner';
+import type { UserDTO } from '@/modules/accounts/contracts/auth-contract';
 
-export interface UserSession {
-  id: string;
-  email: string;
-  name: string;
-  role: UserRole;
-}
+export type {
+  AuthErrorCode,
+  AuthStatus,
+  SessionDTO,
+  UserDTO,
+  UserRole,
+} from '@/modules/accounts/contracts/auth-contract';
+
+/** @deprecated Use UserDTO; account roles are now a list rather than one role. */
+export type UserSession = UserDTO;
 
 export interface ActionResult<T> {
   success: boolean;
