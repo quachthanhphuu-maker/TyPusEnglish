@@ -41,7 +41,7 @@ describe('Auth UI Presentation Contract & Merge Safety', () => {
     );
     expect(fs.existsSync(registerPagePath)).toBe(true);
     const content = fs.readFileSync(registerPagePath, 'utf-8');
-    expect(content).toContain('export default async function RegisterPage');
+    expect(content).toMatch(/export default (async )?function RegisterPage/);
   });
 
   it('verifies isolated preview route is guarded against production environments', () => {

@@ -42,9 +42,9 @@ export function HomeNavbar() {
             <span className="uppercase font-heading">{locale === 'vi' ? 'VI' : 'EN'}</span>
           </button>
 
-          {/* Đăng nhập button -> links to /[locale]/preview/auth */}
+          {/* Đăng nhập button -> links to /[locale]/login */}
           <Link
-            href={`/${locale}/preview/auth`}
+            href={`/${locale}/login`}
             className="inline-flex items-center gap-1.5 rounded-full bg-[#FF7A00] hover:bg-[#E56E00] text-white px-5 py-2 text-xs font-bold font-heading shadow-md shadow-[#FF7A00]/25 transition-all hover:scale-105 active:scale-95"
           >
             <LogIn className="h-3.5 w-3.5" />

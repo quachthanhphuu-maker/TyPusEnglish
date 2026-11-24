@@ -1,47 +1,117 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useSearchParams } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { AuthSplitLayout } from '@/components/auth/ui/auth-split-layout';
+import { LoginPresentation } from '@/components/auth/ui/login-presentation';
+import type { PenguinState } from '@/components/auth/ui/auth-types';
 import { getSafeReturnTo } from '@/modules/accounts/lib/redirect';
 
-export default function LoginForm({ googleEnabled, zaloEnabled }: { googleEnabled: boolean; zaloEnabled: boolean }) {
+export default function LoginForm({
+  googleEnabled,
+  zaloEnabled,
+}: {
+  googleEnabled: boolean;
+  zaloEnabled: boolean;
+}) {
   const t = useTranslations('auth');
   const locale = useLocale() as 'vi' | 'en';
+  const router = useRouter();
+  const pathname = usePathname();
   const search = useSearchParams();
+
+  const [identifier, setIdentifier] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [busy, setBusy] = React.useState(false);
-  const [error, setError] = React.useState(false);
-  const callbackUrl = getSafeReturnTo(search.get('callbackUrl'), locale) ?? `/${locale}/onboarding`;
-  async function submit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const [error, setError] = React.useState<string | null>(null);
+  const [penguinState, setPenguinState] = React.useState<PenguinState>('idle');
+
+  const callbackUrl =
+    getSafeReturnTo(search.get('callbackUrl'), locale) ?? `/${locale}/onboarding`;
+
+  const toggleLanguage = () => {
+    const nextLocale = locale === 'vi' ? 'en' : 'vi';
+    const segments = pathname.split('/');
+    segments[1] = nextLocale;
+    router.push(segments.join('/'));
+  };
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     if (busy) return;
-    setBusy(true); setError(false);
-    const data = new FormData(event.currentTarget);
+    setBusy(true);
+    setError(null);
+    setPenguinState('loading');
+
     try {
-      const result = await signIn('credentials', { identifier: data.get('identifier'), password: data.get('password'), callbackUrl, redirect: false });
-      if (result?.error) setError(true);
-      else if (result?.url) window.location.assign(result.url);
-      else setError(true);
-    } catch { setError(true); } finally { setBusy(false); }
+      const result = await signIn('credentials', {
+        identifier,
+        password,
+        callbackUrl,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError(t('errors.invalidCredentials'));
+        setPenguinState('idle');
+      } else if (result?.url) {
+        setPenguinState('success');
+        setTimeout(() => {
+          window.location.assign(result.url!);
+        }, 600);
+      } else {
+        setError(t('errors.invalidCredentials'));
+        setPenguinState('idle');
+      }
+    } catch {
+      setError(t('errors.invalidCredentials'));
+      setPenguinState('idle');
+    } finally {
+      setBusy(false);
+    }
   }
-  return <div className="flex min-h-[70vh] items-center justify-center px-4 py-10"><Card className="w-full max-w-md">
-    <CardHeader className="text-center"><CardTitle className="text-2xl">{t('title')}</CardTitle><CardDescription>{t('subtitle')}</CardDescription></CardHeader>
-    <CardContent className="space-y-4">
-      <form onSubmit={submit} className="space-y-3">
-        <label className="block space-y-1 text-sm"><span>{t('identifierLabel')}</span><input name="identifier" required autoComplete="username" maxLength={254} className="h-10 w-full rounded-md border bg-background px-3" /></label>
-        <label className="block space-y-1 text-sm"><span>{t('passwordLabel')}</span><input name="password" type="password" required autoComplete="current-password" className="h-10 w-full rounded-md border bg-background px-3" /></label>
-        {error && <p className="text-sm text-destructive" role="alert">{t('errors.invalidCredentials')}</p>}
-        <Button className="w-full" type="submit" disabled={busy}>{busy ? t('working') : t('signIn')}</Button>
-      </form>
-      <Link className="block text-center text-sm text-primary underline" href={`/${locale}/forgot-password`}>{t('forgotPassword')}</Link>
-      <div className="relative py-1 text-center text-xs text-muted-foreground"><span className="bg-card px-2">{t('orContinueWith')}</span></div>
-      <div className="grid grid-cols-2 gap-2"><Button type="button" variant="outline" disabled={busy || !googleEnabled} onClick={() => signIn('google', { callbackUrl })}>Google</Button><Button type="button" variant="outline" disabled={busy || !zaloEnabled} onClick={() => signIn('zalo', { callbackUrl })}>Zalo</Button></div>
-      {(!googleEnabled || !zaloEnabled) && <p className="text-xs text-muted-foreground">{t('providerSetupHint')}</p>}
-    </CardContent>
-    <CardFooter className="flex justify-center gap-1 border-t pt-4 text-sm text-muted-foreground"><span>{t('registerPrompt')}</span><Link className="font-medium text-primary underline" href={`/${locale}/register`}>{t('registerLink')}</Link></CardFooter>
-  </Card></div>;
+
+  const handleGoogleSignIn = () => {
+    if (!googleEnabled) return;
+    signIn('google', { callbackUrl });
+  };
+
+  const handleZaloSignIn = () => {
+    if (!zaloEnabled) return;
+    signIn('zalo', { callbackUrl });
+  };
+
+  return (
+    <AuthSplitLayout
+      penguinState={penguinState}
+      locale={locale}
+      onLanguageToggle={toggleLanguage}
+    >
+      <LoginPresentation
+        locale={locale}
+        isLoading={busy}
+        errorMessage={error}
+        identifierValue={identifier}
+        passwordValue={password}
+        onIdentifierChange={setIdentifier}
+        onPasswordChange={setPassword}
+        onSubmit={handleSubmit}
+        onGoogleSignIn={handleGoogleSignIn}
+        onZaloSignIn={handleZaloSignIn}
+        onSwitchToRegister={() => router.push(`/${locale}/register`)}
+        onForgotPassword={() => router.push(`/${locale}/forgot-password`)}
+        onFocusFieldChange={(field) => {
+          if (field === 'identifier') setPenguinState('username_focus');
+          else if (field === 'password') setPenguinState('password_focus');
+          else if (field === null && !busy && !error) setPenguinState('idle');
+        }}
+        onPasswordVisibilityChange={(visible) => {
+          if (visible) setPenguinState('password_visible');
+          else setPenguinState('password_focus');
+        }}
+      />
+    </AuthSplitLayout>
+  );
 }
