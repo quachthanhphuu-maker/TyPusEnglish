@@ -31,7 +31,11 @@ Revoking one parent link does not affect another parent or child.
 ### Account onboarding and workspaces
 
 Tutors and independent learners may create accounts through public
-self-registration after verifying their email. New users choose Tutor or
+self-registration using a username and password, Google, or Zalo. Password
+registration requires a verified email; Zalo may create an account without
+one. Email magic-link sign-in is not supported.
+Google and Zalo can be linked later from Account Security after signing in;
+matching email addresses never merge accounts. New users choose Tutor or
 Independent Learner during onboarding. A Tutor role grants no access to
 existing classes, students, or other users' resources. Student and Parent
 roles are granted only after the account redeems a valid, recipient-matched,

@@ -5,11 +5,26 @@ Use [PRD.md](PRD.md) for product permissions and
 
 ## Authentication
 
-Use single-use email magic links through Auth.js. Proposed defaults:
-15 minutes for links, seven days of session inactivity, and 30 days
-of absolute session age. Use revocable server-side sessions with
-Secure, HttpOnly, and SameSite=Lax cookies. Rotate sessions on sign-in
-and revoke affected sessions after account security changes.
+Use Auth.js v4 Credentials, Google OAuth, and Zalo OAuth. Do not use email
+magic-link sign-in. Credential registration requires a verified email;
+email verification and password reset links are single-use and expire after
+15 minutes. Hash passwords with Argon2id using at least 19 MiB memory, two
+iterations, and one lane. Use generic login and registration responses to
+limit account enumeration.
+
+Auth.js v4 Credentials requires JWT sessions. Use its encrypted JWE in an
+HttpOnly, SameSite=Lax cookie (Secure over HTTPS in production), and store
+only a random opaque session ID in PostgreSQL. Check the registry on every
+session read; enforce seven days of inactivity and 30 days absolute lifetime.
+Create a fresh registry row on sign-in, revoke it on logout, and revoke all
+sessions after password reset or account security changes. Never persist
+provider access, refresh, or ID tokens because the application has no need for
+them after profile retrieval. Never put session values in localStorage.
+
+Google and Zalo identities are linked only while the user is signed in from
+Account Security. Never merge accounts because their emails match. Zalo may
+provide no email; an authenticated user can add and verify one for recipient
+matched Student or Parent invitations. Do not remove the last sign-in method.
 
 Tutors and independent learners self-register only after email verification
 and choose their workspace through onboarding. Student and Parent roles are
@@ -20,15 +35,13 @@ through Accounts inside the same transaction. Never accept a Student or
 Parent role from a browser value. A public Tutor account does not imply access
 to any existing class or student record.
 
-The database session adapter checks `lastActivityAt` on every session read,
-updates it for valid activity, deletes expired sessions, and caps rolling
-session renewal at `absoluteExpiresAt`. A sign-in creates a fresh database
-session token. Logout deletes the current session; account security changes
-use the Accounts session-revocation API. The browser receives only the
-HttpOnly session cookie and the allowlisted `UserDTO`, never the session
-token or database model. The client refreshes Auth.js session state hourly and
-on window focus so active users receive renewed cookie expiry. Session tokens
-are never stored in localStorage.
+The JWT session registry checks `lastActivityAt` on every session read,
+updates it for valid activity, and rejects revoked, inactive, or absolutely
+expired sessions. A sign-in creates a fresh registry record. Logout and
+account security changes revoke registry records. The browser receives only
+the HttpOnly JWE cookie and allowlisted `UserDTO`, never the registry ID or
+database model. The client refreshes Auth.js session state hourly and on
+window focus. Session values are never stored in localStorage.
 
 Authentication throttling uses PostgreSQL fixed-window counters keyed by
 HMAC digests of normalized email addresses and trusted proxy IP addresses.
@@ -36,10 +49,12 @@ The email callback gives the same visible result when a link is suppressed
 for rate limiting, so throttling does not reveal account existence. Configure
 the deployment proxy to set/replace its forwarded-IP headers.
 
-Configure `DATABASE_URL`, `AUTH_SECRET`, `NEXTAUTH_URL`,
-`AUTH_EMAIL_SERVER`, and `AUTH_EMAIL_FROM` through deployment environment
-settings. Keep provider credentials server-only. In production, use a trusted
-HTTPS host and Secure cookies; do not use the example values as credentials.
+Configure `DATABASE_URL`, `AUTH_SECRET`, `NEXTAUTH_URL`, email transport,
+`GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`, and `ZALO_APP_ID`/`ZALO_APP_SECRET`
+through environment settings. Use OAuth callback URLs ending in
+`/api/auth/callback/google` and `/api/auth/callback/zalo`. Keep provider
+credentials server-only. In production, use a trusted HTTPS host and Secure
+cookies; never use the example values as credentials.
 
 Return uniform sign-in responses. Rate-limit by address and IP.
 Confirm optional tutor MFA and guardian approval before the real-data pilot.

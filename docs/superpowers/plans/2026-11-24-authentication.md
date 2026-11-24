@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Implement secure email magic-link authentication, role-aware account onboarding, revocable PostgreSQL sessions, and a public Auth Contract while preserving the existing frontend and mock business services.
+**Goal:** Implement verified username/password, Google OAuth, and Zalo OAuth with role-aware onboarding, revocable PostgreSQL-backed session lifecycle controls, and a public Auth Contract while preserving the existing frontend and mock business services.
 
-**Architecture:** Keep all identity and session domain code in `frontend/src/modules/accounts/`. Auth.js v4 uses its Prisma adapter and database sessions; an Accounts-owned adapter wrapper enforces inactivity and absolute session limits. Role grants, rate-limit buckets, and workspace preference are persisted in PostgreSQL. Invitation records remain Classes-owned. Existing locale routing and UI are integrated in place.
+**Architecture:** Keep all identity and session domain code in `frontend/src/modules/accounts/`. Auth.js v4 uses its Prisma adapter and encrypted JWE cookie (Credentials requires JWT sessions); a random server-only session ID maps to a PostgreSQL record enforcing inactivity, absolute expiry, and revocation. Role grants, rate-limit buckets, and workspace preference are persisted in PostgreSQL. Invitation records remain Classes-owned. Existing locale routing and UI are integrated in place.
 
 **Tech Stack:** Next.js 14, React 18, stable Auth.js/NextAuth `next-auth@4.24.15`, `@next-auth/prisma-adapter@1.0.7`, Prisma 6.19, PostgreSQL, Zod, Nodemailer, Vitest.
 
@@ -16,7 +16,8 @@
 - Public self-registration grants Tutor or Independent Learner only through onboarding; Student and Parent roles require a valid invitation.
 - A Tutor registration grants no access to existing classes, students, or other users' resources.
 - Keep all authorization server-side and deny by default; active workspace is a UI preference only.
-- Magic links expire after 15 minutes; sessions expire after seven days inactive and 30 days absolute.
+- Email verification and reset links expire after 15 minutes; email magic-link sign-in is removed. Sessions expire after seven days inactive and 30 days absolute.
+- One account can have password, Google, and Zalo methods. Link/unlink providers only while signed in; never merge on matching email. Zalo accounts may have no email.
 - Cookies are HttpOnly and SameSite=Lax; Secure in production over HTTPS.
 - Keep Prisma, session tokens, email credentials, and database fields out of client components.
 - Preserve locale routing, existing auth UI, portals, shared components, landing UI, and mock business services.
@@ -89,8 +90,8 @@
 
 - [ ] Test the adapter wrapper’s max inactivity, absolute expiry, activity touch, expiry cap, and revocation behavior.
 - [ ] Confirm tests fail against the absent adapter wrapper.
-- [ ] Configure Auth.js email magic links for 900 seconds and database sessions with seven-day rolling expiry, backed by the explicit 30-day cap.
-- [ ] Configure persistent email/IP rate limiting before sending, uniform link-request responses, secure cookies, and Nodemailer SMTP from environment variables.
+- [ ] Configure Credentials, Google, and Zalo providers with 900-second single-use verification/reset tokens and encrypted JWT cookies backed by the PostgreSQL session registry.
+- [ ] Configure persistent email/identifier/IP rate limiting, safe generic responses, secure cookies, and Nodemailer SMTP from environment variables.
 - [ ] Re-run tests, Prisma validation, and typecheck.
 
 ### Task 4: Onboarding, role grants, invitation redemption, and authorization
