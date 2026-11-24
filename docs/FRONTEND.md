@@ -14,10 +14,11 @@ Dựa trên: [PRD.md](PRD.md) (v1.0), [ARCHITECTURE.md](ARCHITECTURE.md), [SECUR
 app/[locale]/
 ├── (auth)/
 │   ├── login/                        # Đăng nhập bằng Email Magic Link
+│   ├── register/                     # Public Tutor / Independent Learner registration
+│   ├── onboarding/                   # Choose first self-service workspace
+│   ├── workspace/                    # Select and switch among authorized roles
 │   ├── verify-request/               # Thông báo đã gửi magic link
-│   └── invite/
-│       ├── student/[token]/          # Chấp nhận lời mời tham gia lớp học
-│       └── parent/[token]/           # Xác nhận liên kết phụ huynh - học sinh
+│   └── invite/                       # Classes-owned invitation acceptance routes
 │
 ├── (portals)/
 │   ├── tutor/                        # Portal dành cho Gia sư / Giáo viên
@@ -50,6 +51,13 @@ app/[locale]/
 └── tools/                            # Công cụ giảng dạy & Mô phỏng (P1/P2)
     └── simulations/                  # Mô phỏng hình học 3D, Vật lý, Hóa học
 ```
+
+Every portal has a server layout that checks the matching account role.
+The selected workspace is a stored display preference only; the server checks
+the account's current role on every portal request.
+The shared locale layout uses an Auth.js `SessionProvider` to refresh session
+state hourly and when the browser regains focus; protected layouts still read
+the revocable database session and current roles on the server.
 
 ---
 
@@ -145,6 +153,66 @@ export class MockClassService implements IClassService {
 Trong `src/lib/service-factory.ts`:
 * Nếu `process.env.NEXT_PUBLIC_USE_MOCK === "true"`: Trả về `MockClassService`.
 * Khi Backend sẵn sàng: Chuyển sang `PrismaClassService` mà không cần viết lại giao diện Frontend.
+
+Authentication does not use `NEXT_PUBLIC_USE_MOCK`. Business mock services
+remain available in development and are disabled in production. Mock data or
+mock roles never bypass the server-side session and role checks.
+
+### D. Public Auth Contract
+
+`src/modules/accounts/contracts/auth-contract.ts` is the public-safe contract.
+It deliberately omits session tokens and sensitive database fields:
+
+```ts
+type UserRole = 'tutor' | 'student' | 'parent' | 'independent_learner';
+interface UserDTO {
+  id: string;
+  email: string;
+  name: string | null;
+  roles: UserRole[];
+  onboardingStatus: 'NOT_STARTED' | 'COMPLETE';
+  activeWorkspace: UserRole | null;
+}
+interface SessionDTO { user: UserDTO; expiresAt: string; }
+type AuthStatus =
+  | { status: 'unauthenticated' }
+  | { status: 'authenticated'; session: SessionDTO };
+```
+
+The former single-role `UserSession.role` has been replaced by
+`UserDTO.roles[]`; the compatibility alias `UserSession` points to `UserDTO`
+and does not retain a singular `role` property. Update consumers to handle
+zero, one, or multiple roles.
+
+Server APIs include `getAuthStatus()`, `requireWorkspaceAccess(role, locale)`,
+`can(actor, action, resource)` (deny by default), and
+`grantVerifiedInvitationRole(tx, userId, role)`. Server Actions expose
+`completeOnboardingAction`, `addWorkspaceAction`, `selectWorkspaceAction`,
+and `logoutAction`. Classes calls the invitation role grant only after it
+validates and redeems its invitation and links the existing profile inside
+the same transaction.
+
+Invitation acceptance routes and persistence belong to the Classes module.
+They are not implemented by Accounts because this branch has no Classes
+invitation model or service to validate recipient, scope, expiry, revocation,
+single-use state, or profile linking. Until that integration is available,
+Student and Parent role activation remains unavailable in real authentication;
+mock business services remain usable only in development.
+
+The localized Auth.js error route is `app/[locale]/auth/error/`, a sibling of
+the `(auth)` route group. Invitation routes shown in the sitemap are owned by
+Classes and need to be added when its invitation service is implemented.
+
+Safe error codes are `INVALID_EMAIL`, `RATE_LIMITED`, `LINK_INVALID`,
+`LINK_EXPIRED`, `INVITATION_INVALID`, `SESSION_EXPIRED`, `UNAUTHENTICATED`,
+`FORBIDDEN`, and `INTERNAL_ERROR`. Do not return Auth.js or database error
+messages to the browser.
+
+After sign-in, zero roles go to `/${locale}/onboarding`; one role goes to its
+portal; multiple roles use `/${locale}/workspace` unless a still-authorized
+last workspace is remembered. Redirect targets must remain same-origin and
+under the requested locale. The workspace selector always remains available
+for switching.
 
 ---
 

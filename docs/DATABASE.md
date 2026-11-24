@@ -7,7 +7,7 @@ Use PostgreSQL and Prisma. [PRD.md](PRD.md) defines product scope.
 
 | Area | Records and invariants |
 | --- | --- |
-| Accounts | `User` and revocable sessions belong to Accounts. `Entitlement` belongs to Entitlements. |
+| Accounts | Auth.js `User`, `Account`, `VerificationToken`, and revocable database `Session` belong to Accounts. `UserRole` supports multiple roles and is unique per `(userId, role)`. `UserPreference` stores the optional active workspace. `RateLimitBucket` stores hashed identifiers in persistent fixed windows. `Entitlement` belongs to Entitlements. |
 | Classes | `Class` stores owner, subject, grade level, and class type. `StudentProfile` has `ownerTutorId` and optional `userId`. Enforce unique `(ownerTutorId, userId)` when linked. `Enrollment` is unique per class and student profile. |
 | Invitations | `ClassInvitation` and `ParentInvitation` store token digests and lifecycle state. Redeem parent invitations atomically. Enforce one active `ParentLink` per parent and enrollment. |
 | Lessons | `Lesson`, `Attendance`, `PrivateLessonNote`, and `ParentLessonFeedback`. Attendance is unique per lesson and enrollment. Parent-facing queries cannot read private notes. |
@@ -25,6 +25,20 @@ profile. Resolve ownership conflicts before merging records.
 Keep submission timing, grading, and publication separate. A missing
 score differs from zero. Store event instants in UTC and retain the
 relevant IANA timezone for lessons, billing, and learner-local dates.
+
+Accounts sessions store `createdAt`, `lastActivityAt`, and
+`absoluteExpiresAt`. Enforce seven days of inactivity and a 30-day absolute
+lifetime in the Accounts adapter; Auth.js's rolling `expires` value alone
+does not enforce the absolute cap. Email verification tokens are single-use
+and expire after 15 minutes. Store rate-limit identifiers as HMAC digests.
+
+`ClassInvitation` and `ParentInvitation` remain owned by Classes. Classes
+validates recipient, class/profile scope, expiration, revocation, and
+single-use redemption and links the existing profile/relationship in one
+transaction. After that validation, it calls the server-only Accounts
+`grantVerifiedInvitationRole` API in the same transaction. Accounts does not
+create a parallel invitation table or grant Student/Parent roles from a
+client-selected value.
 
 ## P1 and P2 Model Sketches
 

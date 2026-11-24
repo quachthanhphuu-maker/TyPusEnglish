@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { AuthSessionProvider } from '@/modules/accounts/components/auth-session-provider';
 import '@/app/globals.css';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -39,9 +40,11 @@ export default async function LocaleLayout({
       className={`${plusJakartaSans.variable} ${inter.variable}`}
     >
       <body className="min-h-screen bg-[#F8FBFF] text-[#1B2A38] font-body antialiased selection:bg-[#FF7A00] selection:text-white">
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          {children}
-        </NextIntlClientProvider>
+        <AuthSessionProvider>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            {children}
+          </NextIntlClientProvider>
+        </AuthSessionProvider>
       </body>
     </html>
   );

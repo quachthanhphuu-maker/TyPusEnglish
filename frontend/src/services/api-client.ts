@@ -20,7 +20,8 @@ import {
 
 // Toggle mock mode through env variable or default to true for Frontend Foundation
 export const isMockMode = () => {
-  return process.env.NEXT_PUBLIC_USE_MOCK !== 'false';
+  return process.env.NODE_ENV !== 'production' &&
+    process.env.NEXT_PUBLIC_USE_MOCK !== 'false';
 };
 
 export const tutorService = {

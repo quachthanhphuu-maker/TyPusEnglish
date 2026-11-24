@@ -5,6 +5,12 @@ TypeScript, PostgreSQL, and Prisma. Use Auth.js for identity, Zod for
 validation, next-intl for localization, and Tailwind CSS with shadcn/ui
 for UI. Test with Vitest, PostgreSQL integration tests, and Playwright.
 
+The Accounts implementation currently uses stable NextAuth 4.24.15 with
+`@next-auth/prisma-adapter` 1.0.7, which supports this repository's Next.js 14,
+React 18, and Prisma 6 stack. Keep database sessions and email magic links
+behind the Accounts module; review a move to Auth.js v5 after that major
+version leaves beta.
+
 ## Module Boundaries
 
 | Module | Owns | Allowed domain dependencies |

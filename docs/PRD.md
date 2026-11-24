@@ -28,6 +28,22 @@ Removing a student ends their class access immediately and revokes parent
 access for that student in that class. Other valid links remain active.
 Revoking one parent link does not affect another parent or child.
 
+### Account onboarding and workspaces
+
+Tutors and independent learners may create accounts through public
+self-registration after verifying their email. New users choose Tutor or
+Independent Learner during onboarding. A Tutor role grants no access to
+existing classes, students, or other users' resources. Student and Parent
+roles are granted only after the account redeems a valid, recipient-matched,
+scoped, unexpired, unrevoked, single-use invitation. Account linking preserves
+the existing student profile and its relationships.
+
+An account with no roles goes to onboarding. An account with one role opens
+that portal. An account with multiple roles can select and switch workspaces
+without signing in again. The last authorized workspace may be remembered as
+a UI preference; it never grants permission. Every workspace and resource
+access is checked on the server.
+
 ## 3. Core User Flows
 
 1. **Set up tutoring.** Create a one-to-one or group class, choose a

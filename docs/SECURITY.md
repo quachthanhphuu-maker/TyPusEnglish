@@ -11,6 +11,36 @@ of absolute session age. Use revocable server-side sessions with
 Secure, HttpOnly, and SameSite=Lax cookies. Rotate sessions on sign-in
 and revoke affected sessions after account security changes.
 
+Tutors and independent learners self-register only after email verification
+and choose their workspace through onboarding. Student and Parent roles are
+invitation-only. Classes owns the invitation records and performs recipient,
+scope, expiry, revocation, and single-use checks while linking the existing
+student profile or parent relationship. It grants the matching account role
+through Accounts inside the same transaction. Never accept a Student or
+Parent role from a browser value. A public Tutor account does not imply access
+to any existing class or student record.
+
+The database session adapter checks `lastActivityAt` on every session read,
+updates it for valid activity, deletes expired sessions, and caps rolling
+session renewal at `absoluteExpiresAt`. A sign-in creates a fresh database
+session token. Logout deletes the current session; account security changes
+use the Accounts session-revocation API. The browser receives only the
+HttpOnly session cookie and the allowlisted `UserDTO`, never the session
+token or database model. The client refreshes Auth.js session state hourly and
+on window focus so active users receive renewed cookie expiry. Session tokens
+are never stored in localStorage.
+
+Authentication throttling uses PostgreSQL fixed-window counters keyed by
+HMAC digests of normalized email addresses and trusted proxy IP addresses.
+The email callback gives the same visible result when a link is suppressed
+for rate limiting, so throttling does not reveal account existence. Configure
+the deployment proxy to set/replace its forwarded-IP headers.
+
+Configure `DATABASE_URL`, `AUTH_SECRET`, `NEXTAUTH_URL`,
+`AUTH_EMAIL_SERVER`, and `AUTH_EMAIL_FROM` through deployment environment
+settings. Keep provider credentials server-only. In production, use a trusted
+HTTPS host and Secure cookies; do not use the example values as credentials.
+
 Return uniform sign-in responses. Rate-limit by address and IP.
 Confirm optional tutor MFA and guardian approval before the real-data pilot.
 
