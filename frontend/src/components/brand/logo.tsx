@@ -10,6 +10,7 @@ export interface LogoProps {
   showText?: boolean;
   href?: string;
   className?: string;
+  dark?: boolean;
 }
 
 export function Logo({
@@ -17,6 +18,7 @@ export function Logo({
   showText = true,
   href,
   className,
+  dark = false,
 }: LogoProps) {
   const [imageError, setImageError] = React.useState(false);
 
@@ -62,7 +64,13 @@ export function Logo({
       </div>
 
       {showText && (
-        <span className={cn('tracking-tight text-arctic-slate transition-colors', sizeDimensions.text)}>
+        <span
+          className={cn(
+            'tracking-tight transition-colors',
+            dark ? 'text-white' : 'text-arctic-slate',
+            sizeDimensions.text,
+          )}
+        >
           TyPus<span className="text-arctic-orange">English</span>
         </span>
       )}

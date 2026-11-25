@@ -36,8 +36,8 @@ export function RegisterPresentation({
     usernameLabel: isEn ? 'Username' : 'Tên đăng nhập',
     usernamePlaceholder: isEn ? 'Choose a username' : 'Chọn tên đăng nhập',
     usernameHint: isEn
-      ? '3–32 letters, numbers, dots, hyphens, or underscores.'
-      : 'Dài 3–32 ký tự, gồm chữ, số, dấu chấm, gạch ngang hoặc gạch dưới.',
+      ? '3–32 characters; start with a letter or number, then use letters, numbers, dots, hyphens, or underscores.'
+      : 'Dài 3–32 ký tự; bắt đầu bằng chữ hoặc số, sau đó có thể dùng chữ, số, dấu chấm, gạch ngang hoặc gạch dưới.',
     passwordLabel: isEn ? 'Password' : 'Mật khẩu',
     passwordPlaceholder: isEn ? 'Choose a strong password' : 'Nhập mật khẩu an toàn',
     passwordHint: isEn ? 'Use 12–128 characters.' : 'Dùng từ 12 đến 128 ký tự.',
