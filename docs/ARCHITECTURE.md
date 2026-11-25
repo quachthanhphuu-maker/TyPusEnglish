@@ -1,238 +1,71 @@
-# Architecture — English Learning Hub
+# TyPusEnglish — Architecture
 
-## 1. Architecture Style
+[PRD.md](PRD.md) defines product scope. Use a modular monolith with Next.js,
+TypeScript, PostgreSQL, and Prisma. Use Auth.js for identity, Zod for
+validation, next-intl for localization, and Tailwind CSS with shadcn/ui
+for UI. Test with Vitest, PostgreSQL integration tests, and Playwright.
 
-Use a modular monolith with a single Next.js application and PostgreSQL database.
+The Accounts implementation uses stable NextAuth 4.24.15 with
+`@next-auth/prisma-adapter` 1.0.7, compatible with this repository's Next.js 14,
+React 18, and Prisma 6 stack. Accounts supports verified username/password,
+Google OAuth, and Zalo OAuth. Auth.js stores an encrypted JWT only in its
+HttpOnly cookie; a random server-side session ID in PostgreSQL enforces
+revocation, seven-day inactivity, and 30-day absolute expiry. Email is used
+for credential verification and password reset, never as magic-link login.
 
-Modules:
-- `auth`
-- `learning`
-- `dashboard`
-- `tutoring` (introduced in v0.2)
+## Module Boundaries
 
-The learning and tutoring domains own their own business rules and database access.
+| Module | Owns | Allowed domain dependencies |
+| --- | --- | --- |
+| Accounts | Identity and sessions | None |
+| Classes | Classes, profiles, enrollment, invitations, and parent links | Accounts |
+| Lessons | Scheduling, attendance, and feedback | Classes |
+| Assessments | Question bank, versions, submissions, and grades | Classes; Entitlements when AI ships |
+| Tuition | Charges and payment ledger | Classes |
+| Reports | Published snapshots and recipients | Read-only contracts from Classes, Lessons, and Assessments |
+| Entitlements | Basic and Pro capabilities | Accounts |
+| English Self-Study | Vocabulary, flashcards, reviews, streaks, and practice | Accounts; Classes through the approved vocabulary-sharing contract |
+| Simulations | Presets, parameters, and class shares | Classes; Entitlements only for approved plan restrictions |
 
-## 2. Dependency Rules
+Use dependency-cruiser in CI to reject cycles, cross-module internal
+imports, and Reports imports of Tuition. Reports must never receive
+tuition or private notes through another module.
 
-Allowed:
-- `app` → public feature interfaces
-- `dashboard` → public read interfaces from learning and, in v0.2, tutoring
-- `features/learning` → learning internals and shared infrastructure
-- `features/tutoring` → tutoring internals and shared infrastructure
-- `server` → infrastructure and explicitly defined application services
+## Request Flow
 
-Forbidden:
-- Learning importing tutoring internals.
-- Tutoring importing learning internals.
-- App routes importing Prisma models or database clients directly.
-- Client components importing server-only modules.
-- Cross-domain access through direct imports of another domain's private query or service files.
+Use Server Actions for UI mutations and Route Handlers for file grants,
+downloads, cron, and webhooks. Validate inputs and authorize the target
+record on the server. Return allowlisted DTOs. Keep Prisma server-only.
 
-Use each domain's `index.ts` only for intentional public interfaces. Do not export every internal function.
+Keep related writes in the owning module where possible. For a
+cross-module write, the caller owns the transaction and passes a
+server-only transaction context through public write interfaces.
 
-## 3. Directory Structure
+## Storage and Background Work
 
-```text
-english-learning-hub/
-├── .ai/
-│   ├── rules/
-│   └── skills/
-├── .claude/
-│   └── skills -> ../.ai/skills
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-├── docs/
-│   ├── PRD.md
-│   ├── ARCHITECTURE.md
-│   ├── DATABASE.md
-│   └── SECURITY.md
-├── messages/
-│   ├── en/
-│   │   ├── common.json
-│   │   ├── auth.json
-│   │   ├── vocabulary.json
-│   │   ├── review.json
-│   │   ├── quiz.json
-│   │   └── dashboard.json
-│   └── vi/
-│       ├── common.json
-│       ├── auth.json
-│       ├── vocabulary.json
-│       ├── review.json
-│       ├── quiz.json
-│       └── dashboard.json
-├── prisma/
-│   ├── schema.prisma
-│   ├── migrations/
-│   └── seed.ts
-├── src/
-│   ├── app/
-│   │   ├── [locale]/
-│   │   │   ├── (auth)/
-│   │   │   └── (dashboard)/
-│   │   └── api/
-│   ├── features/
-│   │   ├── auth/
-│   │   ├── learning/
-│   │   │   ├── vocabulary/
-│   │   │   ├── review/
-│   │   │   ├── quizzes/
-│   │   │   └── analytics/
-│   │   ├── dashboard/
-│   │   └── tutoring/          # v0.2
-│   ├── components/
-│   │   ├── ui/
-│   │   └── shared/
-│   ├── i18n/
-│   │   ├── routing.ts
-│   │   └── request.ts
-│   ├── lib/
-│   │   ├── auth/
-│   │   ├── db/
-│   │   └── utils/
-│   ├── server/
-│   │   └── shared/
-│   └── types/
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
-├── docker-compose.yml
-├── .env.example
-├── README.md
-├── CLAUDE.md
-└── package.json
-```
+Deploy on Vercel with managed PostgreSQL and private S3 storage. Use
+short-lived direct upload grants and apply the
+[PRD upload policy](PRD.md#non-functional-requirements).
 
-Do not create tutoring implementation files before v0.2 unless needed for a reviewed architectural contract.
+Write the immutable report snapshot, recipient records, audit event,
+and outbox event atomically. Parents see the latest published version
+addressed to them while their link is active. A correction creates a
+new version with an explicit recipient list.
 
-## 4. Feature Module Responsibilities
+Run notification and retention jobs through authenticated Vercel Cron
+endpoints. Process bounded batches and make retries safe. Accounts
+coordinates retention and each module handles its own records. See
+[Database maintenance](DATABASE.md#retention-and-maintenance).
 
-Each feature may contain:
-- `components/`
-- `schemas.ts`
-- `actions.ts`
-- `queries.ts`
-- `service.ts` where meaningful business rules exist
-- `index.ts` for deliberate public exports
-- `__tests__/`
+## Repository Layout
 
-Responsibilities:
-- `actions.ts`: authenticate, validate input, invoke business logic, and revalidate paths.
-- `queries.ts`: read persisted data using authenticated, owner-scoped queries.
-- `service.ts`: implement meaningful business rules, such as SM-2 scheduling and CSV processing.
-- `schemas.ts`: define input schemas and stable validation error keys.
-- `index.ts`: expose only interfaces other modules are allowed to call.
+| Path relative to the application root | Purpose |
+| --- | --- |
+| `src/app/` | Pages, layouts, and Next.js entry points |
+| `src/modules/` | Domain logic and public contracts |
+| `src/lib/db/`, `prisma/` | Database access, schema, and migrations |
+| `messages/`, `tests/` | Translations and verification |
 
-Simple CRUD may omit `service.ts` if there is no independent business rule to encapsulate.
-
-Every server-only query, service, and action module must import `server-only` where appropriate. Client components must not import these modules.
-
-## 5. Ownership and Authorization
-
-Provide a central `requireUser()` helper that returns the authenticated user or rejects the operation.
-
-All private learning queries must be scoped to the authenticated owner. Never rely on a client-supplied user ID as proof of ownership.
-
-Use query helpers that require an owner ID and include ownership conditions in database operations.
-
-For tutoring in v0.2, a student is owned by a tutor. All session, assignment, and assessment reads and writes must verify the chain of ownership.
-
-A nullable `Student.userId` may be added when student accounts are implemented. Linking a student to a user must be explicit and verified; matching by name or email alone is insufficient.
-
-PostgreSQL row-level security may be evaluated later. It is not a substitute for application authorization tests.
-
-## 6. Authentication and Identity
-
-Use a reviewed authentication implementation with:
-- Secure password hashing.
-- Verified email before sensitive account recovery.
-- Password-reset tokens with expiration and single-use semantics.
-- Login and reset-request rate limiting.
-- Secure cookie and session settings.
-
-If Auth.js Credentials is selected, use JWT session strategy as required for that provider configuration. Define and validate the token/session claims explicitly.
-
-A user may use learning functionality and later gain tutor capabilities. Do not encode a single mutually exclusive role into the data model.
-
-Keep role authorization separate from domain ownership. A tutor role does not grant access to another tutor's students.
-
-## 7. Vocabulary and SRS Model
-
-Separate:
-- Manual vocabulary status: `LEARNING`, `FAMILIAR`, `MASTERED`.
-- Scheduling state: repetition count, ease factor, interval, due timestamp, and last review timestamp.
-- Immutable review history: rating, review time, and resulting schedule information.
-
-SM-2 must be a pure function with explicit inputs and outputs. Persistence and authorization belong in the service/action layer, not inside the algorithm.
-
-Use a consistent date/time policy:
-- Store timestamps as UTC instants.
-- Store the user's IANA timezone, defaulting to `Asia/Ho_Chi_Minh`.
-- Calculate local-day statistics using that timezone.
-- Test day-boundary behavior explicitly.
-
-## 8. Internationalization
-
-Use `next-intl` with route-based locales and namespaced message files.
-
-Locale-aware routing and authentication protection must be composed according to the installed Next.js version. Use `middleware.ts` or `proxy.ts` as appropriate for that version; do not create both without a documented need.
-
-Validation schemas return stable error keys and parameters. UI components translate those keys through the active locale.
-
-CI must detect missing translation keys or provide a test that compares message keys across `en` and `vi`.
-
-## 9. Database and Infrastructure
-
-- PostgreSQL is the source of truth.
-- Prisma migrations are committed to Git.
-- Local development and integration tests use separate databases.
-- `docker-compose.yml` provisions development and test PostgreSQL services or documented profiles.
-- Test fixtures contain synthetic data only.
-- Backup and restore procedures must be documented before deployment.
-- Environment secrets are never committed.
-
-Use real PostgreSQL for ownership and authorization integration tests. Do not mock Prisma in these tests.
-
-## 10. Automated Architecture Enforcement
-
-Configure ESLint boundaries to prevent:
-- Cross-domain imports into private implementation files.
-- Imports of Prisma/database clients from app and client UI layers.
-- Server-only modules being imported by client components.
-
-The exact lint configuration must match the installed ESLint version and project module aliases. CI must fail when a forbidden import is introduced.
-
-## 11. Testing Strategy
-
-Unit:
-- SM-2 calculation and edge cases.
-- CSV parsing, normalization, and validation.
-- Pure score calculation and analytics functions.
-
-Integration with PostgreSQL:
-- User ownership isolation.
-- Query and mutation authorization.
-- Vocabulary persistence.
-- Review-state transitions.
-- CSV import transaction behavior.
-
-End-to-end:
-- Registration and login.
-- Create, edit, search, and archive vocabulary.
-- Complete a review and inspect the next due date.
-- Import vocabulary and inspect row-level errors.
-- Complete a quiz and inspect the saved result.
-- Switch between Vietnamese and English.
-
-## 12. Deployment and Operations
-
-Before public release:
-- Configure production environment variables.
-- Apply reviewed migrations.
-- Verify backup and restore.
-- Configure error tracking without sensitive payloads.
-- Configure rate limits and secure cookies.
-- Test account export and deletion.
-- Verify critical user flows on the deployed environment.
+Confirm the application root from the repository manifests. Keep project
+documentation in `docs/` at the repository root. Follow
+[AGENTS.md](../AGENTS.md) and [SECURITY.md](SECURITY.md).
