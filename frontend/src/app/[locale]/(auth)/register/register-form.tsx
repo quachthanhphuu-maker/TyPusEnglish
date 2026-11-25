@@ -8,6 +8,7 @@ import { AuthSplitLayout } from '@/components/auth/ui/auth-split-layout';
 import { RegisterPresentation } from '@/components/auth/ui/register-presentation';
 import type { PenguinState } from '@/components/auth/ui/auth-types';
 import { registerCredentialsAction } from '@/modules/accounts/actions';
+import { validatePassword, validateUsername } from '@/modules/accounts/lib/credential-input';
 
 export default function RegisterForm({
   googleEnabled,
@@ -39,6 +40,16 @@ export default function RegisterForm({
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (busy) return;
+    if (!validateUsername(username)) {
+      setError(t('errors.invalidUsername'));
+      setPenguinState('idle');
+      return;
+    }
+    if (!validatePassword(password)) {
+      setError(t('errors.invalidPassword'));
+      setPenguinState('idle');
+      return;
+    }
     setBusy(true);
     setError(null);
     setPenguinState('loading');

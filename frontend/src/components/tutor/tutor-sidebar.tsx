@@ -41,6 +41,7 @@ interface MenuSection {
 
 interface TutorSidebarProps {
   locale: string;
+  basePath?: string;
   className?: string;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
@@ -48,6 +49,7 @@ interface TutorSidebarProps {
 
 export function TutorSidebar({
   locale,
+  basePath: basePathProp,
   className,
   collapsed = false,
   onToggleCollapse,
@@ -55,6 +57,7 @@ export function TutorSidebar({
   const pathname = usePathname();
 
   const isEn = locale === 'en';
+  const basePath = basePathProp ?? `/${locale}/tutor`;
 
   const menuSections: MenuSection[] = [
     {
@@ -62,9 +65,9 @@ export function TutorSidebar({
       items: [
         {
           label: isEn ? 'Overview' : 'Tổng quan',
-          href: `/${locale}/tutor`,
+          href: basePath,
           icon: LayoutDashboard,
-          active: pathname === `/${locale}/tutor`,
+          active: pathname === basePath,
         },
       ],
     },
@@ -73,37 +76,37 @@ export function TutorSidebar({
       items: [
         {
           label: isEn ? 'Courses' : 'Khoá học',
-          href: `/${locale}/tutor#courses`,
+          href: `${basePath}#courses`,
           icon: BookOpen,
           active: false,
         },
         {
           label: isEn ? 'Classes' : 'Lớp học',
-          href: `/${locale}/tutor#classes`,
+          href: `${basePath}#classes`,
           icon: GraduationCap,
           active: false,
         },
         {
           label: isEn ? 'Timetable' : 'Thời khoá biểu',
-          href: `/${locale}/tutor#schedule`,
+          href: `${basePath}#schedule`,
           icon: Calendar,
           active: false,
         },
         {
           label: isEn ? 'Attendance' : 'Điểm danh',
-          href: `/${locale}/tutor#attendance`,
+          href: `${basePath}#attendance`,
           icon: CalendarCheck,
           active: false,
         },
         {
           label: isEn ? 'TyPus Notebook' : 'TyPus Notebook',
-          href: `/${locale}/tutor#notebook`,
+          href: `${basePath}#notebook`,
           icon: FileSpreadsheet,
           active: false,
         },
         {
           label: isEn ? 'Scorebook' : 'Điểm số',
-          href: `/${locale}/tutor#grades`,
+          href: `${basePath}#grades`,
           icon: Award,
           active: false,
         },
@@ -114,7 +117,7 @@ export function TutorSidebar({
       items: [
         {
           label: isEn ? 'Student Profiles' : 'Danh sách học viên',
-          href: `/${locale}/tutor#students`,
+          href: `${basePath}#students`,
           icon: Users,
           hasSubmenu: true,
           active: false,
@@ -126,7 +129,7 @@ export function TutorSidebar({
       items: [
         {
           label: isEn ? 'Tuition & Fees' : 'Học phí & Thu chi',
-          href: `/${locale}/tutor#tuition`,
+          href: `${basePath}#tuition`,
           icon: Wallet,
           hasSubmenu: true,
           active: false,
@@ -138,22 +141,22 @@ export function TutorSidebar({
   const bottomItems = [
     {
       label: isEn ? 'Staff / Team' : 'Nhân sự',
-      href: `/${locale}/tutor#staff`,
+      href: `${basePath}#staff`,
       icon: UserCog,
     },
     {
       label: isEn ? 'Settings' : 'Cài đặt',
-      href: `/${locale}/tutor#settings`,
+      href: `${basePath}#settings`,
       icon: Settings,
     },
     {
       label: isEn ? 'Plans & Billing' : 'Gói & thanh toán',
-      href: `/${locale}/tutor#billing`,
+      href: `${basePath}#billing`,
       icon: CreditCard,
     },
     {
       label: isEn ? 'Help & Guide' : 'Hướng dẫn',
-      href: `/${locale}/tutor#help`,
+      href: `${basePath}#help`,
       icon: HelpCircle,
     },
   ];

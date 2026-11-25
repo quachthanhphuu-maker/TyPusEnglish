@@ -21,8 +21,11 @@ export interface ActionResult<T> {
 export interface ClassSummaryDTO {
   id: string;
   name: string;
+  nameEn?: string;
   subject: string;
+  subjectEn?: string;
   gradeLevel: string;
+  gradeLevelEn?: string;
   classType: 'ONE_TO_ONE' | 'SMALL_GROUP';
   studentCount: number;
   nextLesson?: string;
@@ -44,6 +47,7 @@ export interface LessonSummaryDTO {
   classId: string;
   scheduledAt: string;
   topic: string;
+  topicEn?: string;
   attendedCount: number;
   totalStudents: number;
   status: 'SCHEDULED' | 'COMPLETED' | 'CANCELLED';
@@ -54,10 +58,62 @@ export interface AssignmentDTO {
   id: string;
   classId: string;
   title: string;
+  titleEn?: string;
   dueDate: string;
   totalSubmissions: number;
   gradedCount: number;
   totalStudents: number;
+}
+
+export interface TutorSubmissionReviewDTO {
+  id: string;
+  studentName: string;
+  className: string;
+  classNameEn?: string;
+  assignmentTitle: string;
+  assignmentTitleEn?: string;
+  submittedAt: string;
+  status: 'UNGRADED';
+}
+
+export interface StudentDashboardAssignmentDTO {
+  id: string;
+  className: string;
+  classNameEn?: string;
+  title: string;
+  titleEn?: string;
+  dueDate: string;
+  status: 'NOT_SUBMITTED' | 'SUBMITTED' | 'GRADED';
+}
+
+export interface StudentPublishedResultDTO {
+  id: string;
+  className: string;
+  classNameEn?: string;
+  assignmentTitle: string;
+  assignmentTitleEn?: string;
+  score: number;
+  publishedAt: string;
+  feedback: string;
+  feedbackEn?: string;
+}
+
+export type ParentProgressSkill = 'listening' | 'speaking' | 'writing' | 'grammar' | 'problemSolving' | 'algebra';
+
+export interface ParentChildDashboardDTO {
+  id: string;
+  name: string;
+  gradeLevel: string;
+  className: string;
+  classNameEn?: string;
+  tutorName: string;
+  schedule: { scheduledAt: string; topic: string; topicEn?: string }[];
+  attendancePresent: number;
+  attendanceTotal: number;
+  averageScore: number;
+  feedback: string;
+  feedbackEn?: string;
+  progress: { skill: ParentProgressSkill; percentage: number }[];
 }
 
 // Tuition DTOs

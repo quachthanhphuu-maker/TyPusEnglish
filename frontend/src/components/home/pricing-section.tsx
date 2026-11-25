@@ -86,7 +86,9 @@ export function PricingSection() {
                         >
                           <Check className="h-3 w-3 stroke-[3]" />
                         </div>
-                        <span className="text-xs sm:text-sm">{t(featKey as any)}</span>
+                        <span className="text-xs sm:text-sm">
+                          {t(featKey.replace(/^home\.pricing\./, '') as any)}
+                        </span>
                       </li>
                     ))}
                   </ul>
