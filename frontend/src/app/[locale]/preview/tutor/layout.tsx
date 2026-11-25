@@ -28,6 +28,7 @@ export default function TutorPreviewLayout({
           locale={locale}
           userName="Phú Thanh"
           userRole={locale === 'en' ? 'Center Owner (Preview)' : 'Chủ trung tâm (Xem thử)'}
+          isPreview
         />
         <main className="flex-1 overflow-y-auto bg-[#0B131E] p-6 md:p-8">
           <div className="mx-auto max-w-7xl space-y-6">{children}</div>

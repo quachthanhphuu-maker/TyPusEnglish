@@ -14,24 +14,31 @@ import {
   Settings,
   User,
   ShieldCheck,
+  SwitchCamera,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { logoutAction } from '@/modules/accounts/actions';
+import { getStudentInitials } from '@/modules/dashboards/lib/student-helpers';
 
 interface TutorTopbarProps {
   locale: string;
   userName?: string;
   userRole?: string;
+  hasMultipleRoles?: boolean;
+  isPreview?: boolean;
 }
 
 export function TutorTopbar({
   locale,
   userName = 'Phú Thanh',
   userRole = 'Chủ trung tâm',
+  hasMultipleRoles = false,
+  isPreview = false,
 }: TutorTopbarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [profileMenuOpen, setProfileMenuOpen] = React.useState(false);
   const isEn = locale === 'en';
+  const initials = getStudentInitials(userName);
 
   const toggleLanguage = () => {
     const nextLocale = locale === 'vi' ? 'en' : 'vi';
@@ -107,7 +114,7 @@ export function TutorTopbar({
             className="flex items-center gap-2 rounded-xl border border-[#1E293B] bg-[#131E2B] p-1.5 hover:border-[#334155] transition-colors"
           >
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#0EA5E9] text-[11px] font-bold text-white shadow-sm">
-              PT
+              {initials}
             </div>
             <ChevronDown className="h-3 w-3 text-slate-400" />
           </button>
@@ -127,15 +134,43 @@ export function TutorTopbar({
               </div>
 
               <div className="py-1">
+                {isPreview ? (
+                  <Link
+                    href={`/${locale}/preview/student`}
+                    className="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-300 hover:bg-[#1E293B] hover:text-white transition-colors"
+                  >
+                    <SwitchCamera className="h-3.5 w-3.5 text-slate-400" />
+                    <span>{isEn ? 'Preview Student UI' : 'Xem thử giao diện Học sinh'}</span>
+                  </Link>
+                ) : (
+                  <>
+                    {hasMultipleRoles && (
+                      <Link
+                        href={`/${locale}/workspace`}
+                        className="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-300 hover:bg-[#1E293B] hover:text-white transition-colors"
+                      >
+                        <SwitchCamera className="h-3.5 w-3.5 text-slate-400" />
+                        <span>{isEn ? 'Switch workspace' : 'Chuyển không gian'}</span>
+                      </Link>
+                    )}
+                    <Link
+                      href={`/${locale}/account-security`}
+                      className="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-300 hover:bg-[#1E293B] hover:text-white transition-colors"
+                    >
+                      <ShieldCheck className="h-3.5 w-3.5 text-slate-400" />
+                      <span>{isEn ? 'Account security' : 'Bảo mật tài khoản'}</span>
+                    </Link>
+                  </>
+                )}
                 <Link
-                  href={`/${locale}/tutor#profile`}
+                  href={isPreview ? `/${locale}/preview/tutor#profile` : `/${locale}/tutor#profile`}
                   className="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-300 hover:bg-[#1E293B] hover:text-white transition-colors"
                 >
                   <User className="h-3.5 w-3.5 text-slate-400" />
                   <span>{isEn ? 'Personal Profile' : 'Hồ sơ cá nhân'}</span>
                 </Link>
                 <Link
-                  href={`/${locale}/tutor#settings`}
+                  href={isPreview ? `/${locale}/preview/tutor#settings` : `/${locale}/tutor#settings`}
                   className="flex items-center gap-2 rounded-xl px-3 py-2 text-slate-300 hover:bg-[#1E293B] hover:text-white transition-colors"
                 >
                   <Settings className="h-3.5 w-3.5 text-slate-400" />
@@ -143,15 +178,20 @@ export function TutorTopbar({
                 </Link>
               </div>
 
-              <div className="pt-1 border-t border-[#1E293B]">
-                <Link
-                  href={`/${locale}/login`}
-                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-colors"
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                  <span>{isEn ? 'Sign Out' : 'Đăng xuất'}</span>
-                </Link>
-              </div>
+              {!isPreview && (
+                <div className="pt-1 border-t border-[#1E293B]">
+                  <form action={logoutAction}>
+                    <input type="hidden" name="locale" value={locale} />
+                    <button
+                      type="submit"
+                      className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-colors"
+                    >
+                      <LogOut className="h-3.5 w-3.5" />
+                      <span>{isEn ? 'Sign Out' : 'Đăng xuất'}</span>
+                    </button>
+                  </form>
+                </div>
+              )}
             </div>
           )}
         </div>
