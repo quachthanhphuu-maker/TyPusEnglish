@@ -46,6 +46,8 @@
       "usernameHint": "Dài 3–32 ký tự, gồm chữ, số, dấu chấm, gạch ngang hoặc gạch dưới.",
       "passwordHint": "Dùng từ 12 đến 128 ký tự.",
       "verificationSent": "Nếu thông tin có thể đăng ký, email xác minh đã được gửi.",
+      "resendVerification": "Gửi lại email xác minh",
+      "resendRequestSent": "Nếu tài khoản cần xác minh, hãy kiểm tra hộp thư hoặc thử lại sau.",
       "registrationFailed": "Hãy kiểm tra thông tin và thử lại.",
       "verifyEmailTitle": "Xác minh email",
       "verifyEmail": "Xác minh email",
