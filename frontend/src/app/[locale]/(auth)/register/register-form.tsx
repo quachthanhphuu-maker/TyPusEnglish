@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { AuthSplitLayout } from '@/components/auth/ui/auth-split-layout';
 import { RegisterPresentation } from '@/components/auth/ui/register-presentation';
 import type { PenguinState } from '@/components/auth/ui/auth-types';
-import { registerCredentialsAction } from '@/modules/accounts/actions';
+import { registerCredentialsAction, requestEmailVerificationAction } from '@/modules/accounts/actions';
 
 export default function RegisterForm({
   googleEnabled,
@@ -26,6 +26,8 @@ export default function RegisterForm({
   const [password, setPassword] = React.useState('');
   const [busy, setBusy] = React.useState(false);
   const [sent, setSent] = React.useState(false);
+  const [resendBusy, setResendBusy] = React.useState(false);
+  const [resendRequested, setResendRequested] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [penguinState, setPenguinState] = React.useState<PenguinState>('register_mode');
 
@@ -66,6 +68,23 @@ export default function RegisterForm({
     }
   }
 
+  async function handleResendVerification() {
+    if (resendBusy || !email.trim()) return;
+    setResendBusy(true);
+    setResendRequested(false);
+    try {
+      const data = new FormData();
+      data.set('email', email);
+      data.set('locale', locale);
+      await requestEmailVerificationAction(data);
+    } catch {
+      // Keep the same generic response for unknown addresses and provider failures.
+    } finally {
+      setResendRequested(true);
+      setResendBusy(false);
+    }
+  }
+
   const handleGoogleSignIn = () => {
     if (!googleEnabled) return;
     signIn('google', { callbackUrl: `/${locale}/onboarding` });
@@ -82,31 +101,49 @@ export default function RegisterForm({
       locale={locale}
       onLanguageToggle={toggleLanguage}
     >
-      <RegisterPresentation
-        locale={locale}
-        isLoading={busy}
-        errorMessage={error}
-        successMessage={sent ? t('verificationSent') : null}
-        emailValue={email}
-        usernameValue={username}
-        passwordValue={password}
-        onEmailChange={setEmail}
-        onUsernameChange={setUsername}
-        onPasswordChange={setPassword}
-        onSubmit={handleSubmit}
-        onGoogleSignIn={handleGoogleSignIn}
-        onZaloSignIn={handleZaloSignIn}
-        onSwitchToLogin={() => router.push(`/${locale}/login`)}
-        onFocusFieldChange={(field) => {
-          if (field === 'email' || field === 'username') setPenguinState('username_focus');
-          else if (field === 'password') setPenguinState('password_focus');
-          else if (field === null && !busy && !sent && !error) setPenguinState('register_mode');
-        }}
-        onPasswordVisibilityChange={(visible) => {
-          if (visible) setPenguinState('password_visible');
-          else setPenguinState('password_focus');
-        }}
-      />
+      <>
+        <RegisterPresentation
+          locale={locale}
+          isLoading={busy || resendBusy}
+          errorMessage={error}
+          successMessage={sent ? t('verificationSent') : null}
+          emailValue={email}
+          usernameValue={username}
+          passwordValue={password}
+          onEmailChange={(value) => {
+            setEmail(value);
+            setResendRequested(false);
+          }}
+          onUsernameChange={setUsername}
+          onPasswordChange={setPassword}
+          onSubmit={handleSubmit}
+          onGoogleSignIn={handleGoogleSignIn}
+          onZaloSignIn={handleZaloSignIn}
+          onSwitchToLogin={() => router.push(`/${locale}/login`)}
+          onFocusFieldChange={(field) => {
+            if (field === 'email' || field === 'username') setPenguinState('username_focus');
+            else if (field === 'password') setPenguinState('password_focus');
+            else if (field === null && !busy && !sent && !error) setPenguinState('register_mode');
+          }}
+          onPasswordVisibilityChange={(visible) => {
+            if (visible) setPenguinState('password_visible');
+            else setPenguinState('password_focus');
+          }}
+        />
+        {email.trim() && (sent || error) ? (
+          <div className="mt-4 space-y-2 text-center">
+            <button
+              type="button"
+              disabled={busy || resendBusy}
+              onClick={handleResendVerification}
+              className="text-sm font-semibold text-[#0EA5E9] underline underline-offset-2 disabled:opacity-60"
+            >
+              {resendBusy ? t('working') : t('resendVerification')}
+            </button>
+            {resendRequested ? <p role="status" className="text-xs text-slate-500">{t('resendRequestSent')}</p> : null}
+          </div>
+        ) : null}
+      </>
     </AuthSplitLayout>
   );
 }

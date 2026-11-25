@@ -46,6 +46,8 @@
       "usernameHint": "3–32 letters, numbers, dots, hyphens, or underscores.",
       "passwordHint": "Use 12–128 characters.",
       "verificationSent": "If the details are available, a verification email has been sent.",
+      "resendVerification": "Send the verification email again",
+      "resendRequestSent": "If this account needs verification, check your inbox or try again later.",
       "registrationFailed": "Check the details and try again.",
       "verifyEmailTitle": "Verify your email",
       "verifyEmail": "Verify email",

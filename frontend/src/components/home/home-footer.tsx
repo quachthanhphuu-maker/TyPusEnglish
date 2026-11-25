@@ -91,9 +91,9 @@ export function HomeFooter() {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <a href="#privacy" className="hover:text-emerald-400 transition-colors">
+                <Link href={`/${locale}/privacy`} className="hover:text-emerald-400 transition-colors">
                   {t('trustCol.link1')}
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#security" className="hover:text-emerald-400 transition-colors">

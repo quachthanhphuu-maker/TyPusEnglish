@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { createHash, randomBytes } from 'node:crypto';
-import { createTransport } from 'nodemailer';
+import { sendGmailApiMessage } from '../lib/gmail-api';
 import { prisma } from '@/lib/db/prisma';
 import { normalizeEmail } from '../lib/email';
 import { normalizeUsername, resolveLoginIdentifier, validatePassword, validateUsername } from '../lib/credential-input';
@@ -34,18 +34,13 @@ export async function authenticateCredentials(identifier: unknown, password: unk
 
 async function sendActionEmail(email: string, token: string, purpose: 'verify' | 'reset', locale: 'vi' | 'en') {
   const baseUrl = process.env.NEXTAUTH_URL;
-  const emailServer = process.env.AUTH_EMAIL_SERVER ?? (process.env.NODE_ENV === 'development' ? 'smtp://127.0.0.1:1025' : '');
-  const emailFrom = process.env.AUTH_EMAIL_FROM ?? (process.env.NODE_ENV === 'development' ? 'TyPusEnglish <no-reply@example.test>' : '');
-  if (!baseUrl || !emailServer || !emailFrom) {
-    throw new Error('AUTH_EMAIL_NOT_CONFIGURED');
-  }
+  if (!baseUrl) throw new Error('EMAIL_APP_URL_NOT_CONFIGURED');
   const path = purpose === 'verify' ? 'verify-email' : 'reset-password';
   const url = new URL(`/${locale}/${path}`, baseUrl);
   url.searchParams.set('token', token);
   const vi = locale === 'vi';
-  await createTransport(emailServer).sendMail({
+  await sendGmailApiMessage({
     to: email,
-    from: emailFrom,
     subject: purpose === 'verify' ? (vi ? 'Xác minh email TyPusEnglish' : 'Verify your TyPusEnglish email') : (vi ? 'Đặt lại mật khẩu TyPusEnglish' : 'Reset your TyPusEnglish password'),
     text: `${vi ? 'Mở liên kết này' : 'Open this link'}: ${url.toString()}\n${vi ? 'Liên kết hết hạn sau 15 phút.' : 'This link expires in 15 minutes.'}`,
   });
@@ -78,6 +73,36 @@ export async function registerCredentials(input: { email: unknown; username: unk
   const user = await prisma.user.create({ data: { email, username, passwordHash: await hashPassword(password) } });
   await issueActionToken(user.id, 'VERIFY_EMAIL', email, input.locale);
   return 'accepted';
+}
+
+export async function requestEmailVerification(emailValue: unknown, locale: 'vi' | 'en'): Promise<void> {
+  const email = normalizeEmail(emailValue);
+  const limitSecret = secret();
+  if (!email || !limitSecret) return;
+
+  const clientIp = (await import('../lib/request-context')).getAuthRequestContext()?.clientIp ?? 'unknown';
+  const [allowedEmail, allowedIp] = await Promise.all([
+    consumePersistentRateLimit(prisma, `resend-verification:${email}`, limitSecret, 5, 60 * 60_000),
+    consumePersistentRateLimit(prisma, `resend-verification-ip:${clientIp}`, limitSecret, 15, 60 * 60_000),
+  ]);
+  if (!allowedEmail || !allowedIp) return;
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: { id: true, emailVerified: true, passwordHash: true },
+  });
+  if (!user?.passwordHash || user.emailVerified) return;
+
+  try {
+    await issueActionToken(user.id, 'VERIFY_EMAIL', email, locale);
+  } catch (error) {
+    if (error instanceof Error && (/^GMAIL_/.test(error.message) || error.message === 'EMAIL_APP_URL_NOT_CONFIGURED')) {
+      // Keep the public response generic; logs contain only a fixed provider error code.
+      console.error('Verification email delivery failed:', error.message);
+      return;
+    }
+    throw error;
+  }
 }
 
 export async function consumeAccountToken(rawToken: string, purpose: 'VERIFY_EMAIL' | 'RESET_PASSWORD', password?: string): Promise<boolean> {

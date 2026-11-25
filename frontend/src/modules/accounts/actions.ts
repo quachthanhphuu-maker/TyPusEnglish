@@ -6,7 +6,7 @@ import type { UserRole } from './contracts/auth-contract';
 import { getRoleLandingPath } from './contracts/auth-contract';
 import { getAuthStatus } from './auth';
 import { grantSelfServiceRole, selectAuthorizedWorkspace } from './services/account-service';
-import { registerCredentials, consumeAccountToken, requestPasswordReset, requestAdditionalEmailVerification } from './services/credential-service';
+import { registerCredentials, consumeAccountToken, requestPasswordReset, requestAdditionalEmailVerification, requestEmailVerification } from './services/credential-service';
 import { prisma } from '@/lib/db/prisma';
 import { canRemoveAuthMethod } from './contracts/auth-contract';
 
@@ -32,6 +32,10 @@ export async function resetPasswordAction(token: string, password: string): Prom
 
 export async function requestPasswordResetAction(formData: FormData): Promise<void> {
   await requestPasswordReset(formData.get('email'), getLocale(formData.get('locale')));
+}
+
+export async function requestEmailVerificationAction(formData: FormData): Promise<void> {
+  await requestEmailVerification(formData.get('email'), getLocale(formData.get('locale')));
 }
 
 export async function unlinkOAuthAction(providerValue: string): Promise<boolean> {
